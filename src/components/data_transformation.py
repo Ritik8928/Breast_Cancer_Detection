@@ -16,6 +16,8 @@ from sklearn.preprocessing import (
 from src.exception import CustomException
 from src.logger import logging
 from src.utils import save_object
+from src.components.model_trainer import ModelTrainerConfig
+from src.components.model_trainer import ModelTrainer
 
 
 # =========================================================
@@ -25,11 +27,7 @@ from src.utils import save_object
 
 @dataclass
 class DataTransformationConfig:
-    preprocessor_obj_file_path = os.path.join(
-        'artifacts',
-        'preprocessor.pkl'
-    )
-
+    preprocessor_obj_file_path = os.path.join('artifacts', 'preprocessor.pkl')
 
 # =========================================================
 # Main Data Transformation Class
@@ -233,9 +231,7 @@ class DataTransformation:
                     upper_limit
                 )
 
-            logging.info(
-                "Outliers handled using IQR clipping"
-            )
+            logging.info("Outliers handled using IQR clipping")
 
             # =============================================
             # Get preprocessing object
@@ -278,24 +274,35 @@ class DataTransformation:
             )
 
             # =============================================
+            # Alive -> 0
+            # Dead -> 1
+            # =============================================
+
+            target_feature_train_df = (
+                target_feature_train_df.map({'Alive': 0,'Dead': 1})
+            )
+
+            target_feature_test_df = (
+                target_feature_test_df.map({'Alive': 0,'Dead': 1})
+            )
+
+            logging.info(
+                "Target column encoded successfully"
+            )
+
+            # =============================================
             # Apply preprocessing on train and test data
             # =============================================
 
             input_feature_train_arr = (
-                preprocessing_obj.fit_transform(
-                    input_feature_train_df
-                )
+                preprocessing_obj.fit_transform(input_feature_train_df)
             )
 
             input_feature_test_arr = (
-                preprocessing_obj.transform(
-                    input_feature_test_df
-                )
+                preprocessing_obj.transform(input_feature_test_df)
             )
 
-            logging.info(
-                "Preprocessing applied successfully"
-            )
+            logging.info("Preprocessing applied successfully")
 
             # =============================================
             # Combine transformed input data with target
