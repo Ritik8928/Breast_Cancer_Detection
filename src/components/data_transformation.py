@@ -274,16 +274,16 @@ class DataTransformation:
             )
 
             # =============================================
-            # Alive -> 0
-            # Dead -> 1
+            # Alive -> 1
+            # Dead -> 0
             # =============================================
 
             target_feature_train_df = (
-                target_feature_train_df.map({'Alive': 0,'Dead': 1})
+                target_feature_train_df.map({'Alive': 1,'Dead': 0})
             )
 
             target_feature_test_df = (
-                target_feature_test_df.map({'Alive': 0,'Dead': 1})
+                target_feature_test_df.map({'Alive': 1,'Dead': 0})
             )
 
             logging.info(
