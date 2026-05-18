@@ -16,7 +16,7 @@ def get_requirements(file_path:str)->list[str]:
     return requirements 
 
 setup(
-    name= "ML_project",
+    name= "Breast_Cancer_Detection",
     version= "0.0.1",
     author= "Ritik",
     author_email= "ritikvishwakarma6595@gmail.com",

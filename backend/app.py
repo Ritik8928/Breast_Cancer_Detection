@@ -1,0 +1,53 @@
+from flask import Flask
+from flask_cors import CORS
+import os
+import sys
+from dotenv import load_dotenv
+from routes.patient import patient_bp
+from routes.forgot_password import forgot_bp
+
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Add parent directory to path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from routes.auth import auth_bp
+from routes.predict import predict_bp
+from routes.otp import otp_bp
+
+app = Flask(__name__)
+
+# CORS configuration
+CORS(app, origins=['http://localhost:3000', 'http://localhost:5000'], supports_credentials=True)
+
+# Secret key from .env or fallback
+app.secret_key = os.getenv('SECRET_KEY', 'your-secret-key-here-change-this')
+
+# Register blueprints
+app.register_blueprint(auth_bp, url_prefix='/api/auth')
+app.register_blueprint(predict_bp, url_prefix='/api/predict')
+app.register_blueprint(otp_bp, url_prefix='/api/otp')
+app.register_blueprint(patient_bp, url_prefix='/api/patient')
+app.register_blueprint(forgot_bp, url_prefix='/api/forgot-password')
+
+@app.route('/api/health', methods=['GET'])
+def health():
+    return {'status': 'healthy', 'message': 'Server is running!'}
+
+if __name__ == '__main__':
+    print("\n" + "="*50)
+    print("🚀 Flask Backend Running on http://localhost:5000")
+    print("="*50)
+    print("\n📋 Available APIs:")
+    print("   POST /api/auth/register  - Register new user")
+    print("   POST /api/auth/login     - Login user")
+    print("   GET  /api/auth/users     - Get all users (debug)")
+    print("   POST /api/predict/       - Make prediction")
+    print("   POST /api/otp/send       - Send OTP")
+    print("   POST /api/otp/verify     - Verify OTP")
+    print("   GET  /api/health         - Health check")
+    print("="*50 + "\n")
+    
+    app.run(debug=True, port=5000)

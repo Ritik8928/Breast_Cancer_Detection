@@ -58,7 +58,7 @@ class DataTransformation:
             categorical_columns = [
                 "Race",
                 "Marital Status",
-                "T Stage ",
+                "T Stage",
                 "N Stage",
                 "6th Stage",
                 "Estrogen Status",
@@ -162,6 +162,11 @@ class DataTransformation:
 
             train_df = pd.read_csv(train_path)
             test_df = pd.read_csv(test_path)
+
+            # Remove extra spaces from column names
+
+            train_df.columns = train_df.columns.str.strip()
+            test_df.columns = test_df.columns.str.strip()
 
             logging.info(
                 "Train and test data loaded successfully"

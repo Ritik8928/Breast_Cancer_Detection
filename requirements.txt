@@ -6,4 +6,8 @@ scikit-learn
 catboost
 xgboost
 dill
+Flask==2.3.0
+flask-cors==4.0.0
+joblib==1.2.0
+python-dotenv==1.0.0
 #-e .
