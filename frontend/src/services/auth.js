@@ -1,79 +1,61 @@
-// Store users in localStorage (instead of database)
-const USERS_KEY = 'ml_project_users';
-const CURRENT_USER_KEY = 'ml_project_current_user';
+import axios from 'axios';
 
-// Get all users from localStorage
-const getUsers = () => {
-  const users = localStorage.getItem(USERS_KEY);
-  return users ? JSON.parse(users) : [];
-};
+// Production API URL (Render Backend)
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://breast-candetector.onrender.com/api';
 
-// Save users to localStorage
-const saveUsers = (users) => {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-};
-
-// Register new user
-export const registerUser = (userData) => {
-  return new Promise((resolve) => {
-    const users = getUsers();
-    
-    // Check if email already exists
-    const existingUser = users.find(u => u.email === userData.email);
-    if (existingUser) {
-      resolve({ success: false, error: 'Email already registered!' });
-      return;
-    }
-    
-    // Check if username already exists
-    const existingUsername = users.find(u => u.username === userData.username);
-    if (existingUsername) {
-      resolve({ success: false, error: 'Username already taken!' });
-      return;
-    }
-    
-    // Add new user
-    const newUser = {
-      id: Date.now(),
+// Register new user via backend
+export const registerUser = async (userData) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/auth/register`, {
       fullname: userData.fullname,
       email: userData.email,
       username: userData.username,
-      password: userData.password, // In real app, hash this!
-      registeredAt: new Date().toISOString()
+      password: userData.password,
+      phone: userData.phone || ''
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error("Register error:", error);
+    return { 
+      success: false, 
+      error: error.response?.data?.error || 'Registration failed' 
     };
-    
-    users.push(newUser);
-    saveUsers(users);
-    
-    resolve({ success: true, message: 'Registration successful!' });
-  });
+  }
 };
 
-// Login user
-export const loginUser = (email, password) => {
-  return new Promise((resolve) => {
-    const users = getUsers();
-    const user = users.find(u => u.email === email && u.password === password);
+// Login user via backend
+export const loginUser = async (email, password) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/auth/login`, {
+      email,
+      password
+    });
     
-    if (user) {
-      const { password, ...userWithoutPassword } = user;
-      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userWithoutPassword));
-      resolve({ success: true, user: userWithoutPassword });
+    if (response.data.success) {
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      return { success: true, user: response.data.user };
     } else {
-      resolve({ success: false, error: 'Invalid email or password!' });
+      return { success: false, error: response.data.error };
     }
-  });
+  } catch (error) {
+    console.error("Login error:", error);
+    return { 
+      success: false, 
+      error: error.response?.data?.error || 'Login failed' 
+    };
+  }
 };
 
 // Logout user
 export const logoutUser = () => {
-  localStorage.removeItem(CURRENT_USER_KEY);
+  localStorage.removeItem('user');
   return { success: true };
 };
 
 // Get current logged in user
 export const getCurrentUser = () => {
-  const user = localStorage.getItem(CURRENT_USER_KEY);
+  const user = localStorage.getItem('user');
   return user ? JSON.parse(user) : null;
 };
 
@@ -84,10 +66,9 @@ export const isLoggedIn = () => {
 
 // Get current user ID
 export const getCurrentUserId = () => {
-  const user = localStorage.getItem('CURRENT_USER_KEY');
+  const user = getCurrentUser();
   if (user) {
-    const userData = JSON.parse(user);
-    return userData.id || userData.email; // Use email or ID as unique key
+    return user.id || user.email;
   }
   return null;
 };
@@ -98,13 +79,13 @@ const getUserStorageKey = (key) => {
   return userId ? `${userId}_${key}` : key;
 };
 
-// Save user-specific data
+// Save user-specific data (local only)
 export const saveUserData = (key, data) => {
   const storageKey = getUserStorageKey(key);
   localStorage.setItem(storageKey, JSON.stringify(data));
 };
 
-// Get user-specific data
+// Get user-specific data (local only)
 export const getUserData = (key) => {
   const storageKey = getUserStorageKey(key);
   const data = localStorage.getItem(storageKey);
