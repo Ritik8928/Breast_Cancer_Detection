@@ -18,13 +18,23 @@ from routes.otp import otp_bp
 
 app = Flask(__name__)
 
-# CORS configuration 
-CORS(app, origins=[
+# CORS configuration - Read from environment variable
+cors_origins_str = os.getenv('CORS_ORIGINS', '')
+cors_origins = [origin.strip() for origin in cors_origins_str.split(',') if origin.strip()]
+
+# Add default origins
+default_origins = [
     'http://localhost:3000',
     'http://localhost:5000',
     'https://breast-candetector.onrender.com'
-    'https://breast-cancer-detection-wheat-pi.vercel.app' 
-], supports_credentials=True)
+]
+
+# Combine and remove duplicates
+all_origins = list(set(cors_origins + default_origins))
+
+print(f"📋 CORS allowed origins: {all_origins}")
+
+CORS(app, origins=all_origins, supports_credentials=True)
 
 # Secret key from .env or fallback
 app.secret_key = os.getenv('SECRET_KEY', 'your-secret-key-here-change-this')
