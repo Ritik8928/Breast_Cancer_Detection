@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 from routes.patient import patient_bp
 from routes.forgot_password import forgot_bp
 
-
 # Load environment variables from .env file
 load_dotenv()
 
@@ -19,8 +18,12 @@ from routes.otp import otp_bp
 
 app = Flask(__name__)
 
-# CORS configuration
-CORS(app, origins=['http://localhost:3000', 'http://localhost:5000'], supports_credentials=True)
+# CORS configuration - Added Render URL
+CORS(app, origins=[
+    'http://localhost:3000',
+    'http://localhost:5000',
+    'https://breast-candetector.onrender.com'  # ← Add your Render URL
+], supports_credentials=True)
 
 # Secret key from .env or fallback
 app.secret_key = os.getenv('SECRET_KEY', 'your-secret-key-here-change-this')
@@ -35,6 +38,10 @@ app.register_blueprint(forgot_bp, url_prefix='/api/forgot-password')
 @app.route('/api/health', methods=['GET'])
 def health():
     return {'status': 'healthy', 'message': 'Server is running!'}
+
+@app.route('/')
+def home():
+    return {'status': 'ok', 'message': 'Breast Cancer Detection API is running'}
 
 if __name__ == '__main__':
     print("\n" + "="*50)
