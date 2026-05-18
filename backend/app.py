@@ -18,11 +18,12 @@ from routes.otp import otp_bp
 
 app = Flask(__name__)
 
-# CORS configuration - Added Render URL
+# CORS configuration 
 CORS(app, origins=[
     'http://localhost:3000',
     'http://localhost:5000',
-    'https://breast-candetector.onrender.com'  # ← Add your Render URL
+    'https://breast-candetector.onrender.com'
+    'https://breast-cancer-detection-wheat-pi.vercel.app' 
 ], supports_credentials=True)
 
 # Secret key from .env or fallback
