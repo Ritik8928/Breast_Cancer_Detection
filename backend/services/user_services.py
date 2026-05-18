@@ -1,21 +1,19 @@
 import json
 import os
-import bcrypt
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 USERS_FILE = r"D:\Projects\Breast_Cancer_Detection\users.json"
 
 print(f"📁 Users file: {USERS_FILE}")
 
 def hash_password(password):
-    """Hash a password using bcrypt"""
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
-    return hashed.decode('utf-8')
+    """Hash a password using werkzeug"""
+    return generate_password_hash(password)
 
 def verify_password(password, hashed):
     """Verify a password against its hash"""
-    return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
+    return check_password_hash(hashed, password)
 
 class UserService:
     @staticmethod
@@ -68,7 +66,7 @@ class UserService:
             'email': email,
             'username': username,
             'phone': phone,
-            'password': hashed_password,  # ← Hashed password stored
+            'password': hashed_password,
             'registered_at': datetime.now().isoformat()
         }
         
