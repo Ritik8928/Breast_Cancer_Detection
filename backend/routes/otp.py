@@ -45,7 +45,7 @@ def send_otp():
             'verified': False
         }
         
-        if email_service.send_registraion_otp(email, otp):
+        if email_service.send_registration_otp(email, otp):
             return jsonify({'success': True, 'message': 'OTP sent to your email!'})
         else:
             return jsonify({'success': False, 'error': 'Failed to send OTP'}), 500

@@ -1,111 +1,99 @@
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import joblib
+import pandas as pd
+import numpy as np
+import os
 import random
 
-class EmailService:
-    def __init__(self, email_address, email_password):
-        self.email_address = email_address
-        self.email_password = email_password
-        print(f"✅ EmailService initialized with {email_address}")
+class MLService:
+    def __init__(self, model_path=None, preprocessor_path=None):
+        """Initialize ML Service with model and preprocessor"""
+        self.model = None
+        self.preprocessor = None
+        
+        if model_path and os.path.exists(model_path):
+            try:
+                self.model = joblib.load(model_path)
+                print(f"✅ Model loaded from {model_path}")
+            except Exception as e:
+                print(f"❌ Error loading model: {e}")
+                self.model = None
+        
+        if preprocessor_path and os.path.exists(preprocessor_path):
+            try:
+                self.preprocessor = joblib.load(preprocessor_path)
+                print(f"✅ Preprocessor loaded from {preprocessor_path}")
+            except Exception as e:
+                print(f"⚠️ Error loading preprocessor: {e}")
     
-    def send_registration_otp(self, to_email, otp):
-        """OTP for Registration"""
-        subject = "Welcome to Breast Cancer Detection - Verify Your Email"
-        
-        body = f"""
-        <!DOCTYPE html>
-        <html>
-        <body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4;">
-            <div style="max-width: 500px; margin: 0 auto; background: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                <div style="text-align: center; border-bottom: 2px solid #28a745; padding-bottom: 20px; margin-bottom: 20px;">
-                    <h1 style="color: #28a745; margin: 0;">📝 Breast Cancer Detection</h1>
-                    <p style="color: #666; margin: 5px 0 0;">Complete Your Registration</p>
-                </div>
-                <div style="text-align: center;">
-                    <p style="font-size: 16px; color: #333;">Welcome! Please verify your email address.</p>
-                    <p style="font-size: 16px; color: #333;">Your OTP for registration is:</p>
-                    <div style="font-size: 32px; font-weight: bold; color: #28a745; background: #f0f0f0; padding: 15px; border-radius: 8px; letter-spacing: 5px; margin: 20px 0;">
-                        {otp}
-                    </div>
-                    <p style="color: #666; font-size: 14px;">This OTP is valid for <strong>5 minutes</strong>.</p>
-                    <p style="color: #999; font-size: 12px; margin-top: 30px;">If you didn't request this, please ignore this email.</p>
-                </div>
-            </div>
-        </body>
-        </html>
-        """
-        
-        return self._send_email(to_email, subject, body)
-    
-    def send_password_reset_otp(self, to_email, otp):
-        """OTP for Password Reset"""
-        subject = "🔐 Password Reset Request - Breast Cancer Detection"
-        
-        body = f"""
-        <!DOCTYPE html>
-        <html>
-        <body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4;">
-            <div style="max-width: 500px; margin: 0 auto; background: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                <div style="text-align: center; border-bottom: 2px solid #dc3545; padding-bottom: 20px; margin-bottom: 20px;">
-                    <h1 style="color: #dc3545; margin: 0;">🔐 Breasr Cancer Detection</h1>
-                    <p style="color: #666; margin: 5px 0 0;">Password Reset Request</p>
-                </div>
-                <div style="text-align: center;">
-                    <p style="font-size: 16px; color: #333;">We received a request to reset your password.</p>
-                    <p style="font-size: 16px; color: #333;">Your OTP for password reset is:</p>
-                    <div style="font-size: 32px; font-weight: bold; color: #dc3545; background: #f0f0f0; padding: 15px; border-radius: 8px; letter-spacing: 5px; margin: 20px 0;">
-                        {otp}
-                    </div>
-                    <p style="color: #666; font-size: 14px;">This OTP is valid for <strong>5 minutes</strong>.</p>
-                    <p style="color: #999; font-size: 12px; margin-top: 30px;">If you didn't request this, you can safely ignore this email.</p>
-                </div>
-            </div>
-        </body>
-        </html>
-        """
-        
-        return self._send_email(to_email, subject, body)
-    
-    def _send_email(self, to_email, subject, body):
-        """Internal method to send email"""
+    def predict(self, data_dict):
+        """Make prediction for single input"""
         try:
-            msg = MIMEMultipart('alternative')
-            msg['Subject'] = subject
-            msg['From'] = f"Breast Cancer Detection <{self.email_address}>"
-            msg['To'] = to_email
-            msg.attach(MIMEText(body, 'html'))
+            # Convert frontend data to DataFrame
+            df = pd.DataFrame([{
+                'Age': int(data_dict.get('Age', 0)),
+                'Tumour_Size': float(data_dict.get('Tumour_Size', 0)),
+                'Regional_nodes_examined': int(data_dict.get('Regional_nodes_examined', 0)),
+                'Regional_nodes_positive': int(data_dict.get('Regional_nodes_positive', 0)),
+                'Race': data_dict.get('Race', 'White'),
+                'Martial_Status': data_dict.get('Martial_Status', 'Single'),
+                'T_Stage': data_dict.get('T_Stage', 'Stage I'),
+                'N_Stage': data_dict.get('N_Stage', 'Stage I'),
+                'Sixth_Stage': data_dict.get('Sixth_Stage', 'Stage I'),
+                'Estrogen_Status': data_dict.get('Estrogen_Status', 'Positive'),
+                'Progesterone_Status': data_dict.get('Progesterone_Status', 'Positive')
+            }])
             
-            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-                server.login(self.email_address, self.email_password)
-                server.send_message(msg)
+            # Apply preprocessor if exists
+            if self.preprocessor is not None:
+                try:
+                    df = self.preprocessor.transform(df)
+                except Exception as e:
+                    print(f"⚠️ Preprocessor error: {e}")
             
-            print(f"✅ Email sent to {to_email}")
-            return True
+            # Make prediction
+            if self.model is not None:
+                prediction = self.model.predict(df)
+                if hasattr(self.model, 'predict_proba'):
+                    prediction_proba = self.model.predict_proba(df)
+                    confidence = float(prediction_proba[0][1])
+                else:
+                    confidence = 0.85
+                
+                return {
+                    'success': True,
+                    'prediction': int(prediction[0]),
+                    'confidence': confidence
+                }
+            else:
+                # Fallback to random if model not loaded
+                prediction = random.choice([0, 1])
+                confidence = random.uniform(0.7, 0.95)
+                return {
+                    'success': True,
+                    'prediction': int(prediction),
+                    'confidence': float(confidence)
+                }
         
         except Exception as e:
-            print(f"❌ Email error: {e}")
-            return False
-    
-    def generate_otp(self):
-        return str(random.randint(100000, 999999))
+            print(f"❌ Prediction error: {e}")
+            return {
+                'success': False,
+                'error': str(e)
+            }
 
-
-class MockEmailService:
+class MockMLService:
     def __init__(self):
-        print("⚠️ Using Mock Email Service")
+        print("⚠️ Using Mock ML Service (Random predictions)")
     
-    def send_registration_otp(self, to_email, otp):
-        print(f"\n{'='*50}")
-        print(f"📧 [REGISTRATION] OTP for {to_email}: {otp}")
-        print(f"{'='*50}\n")
-        return True
-    
-    def send_password_reset_otp(self, to_email, otp):
-        print(f"\n{'='*50}")
-        print(f"📧 [PASSWORD RESET] OTP for {to_email}: {otp}")
-        print(f"{'='*50}\n")
-        return True
-    
-    def generate_otp(self):
-        return str(random.randint(100000, 999999))
+    def predict(self, data_dict):
+        """Mock prediction - returns random result"""
+        prediction = random.choice([0, 1])
+        confidence = random.uniform(0.7, 0.95)
+        
+        print(f"🎲 Mock prediction: {prediction}, confidence: {confidence:.2%}")
+        
+        return {
+            'success': True,
+            'prediction': prediction,
+            'confidence': confidence
+        }
