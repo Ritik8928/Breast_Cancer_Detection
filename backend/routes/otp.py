@@ -3,7 +3,6 @@ from datetime import datetime
 import sys
 import os
 from dotenv import load_dotenv
-import traceback
 
 load_dotenv()
 
@@ -13,19 +12,16 @@ from services.email_services import EmailService, MockEmailService
 
 otp_bp = Blueprint('otp', __name__)
 
-USE_REAL_EMAIL = True   
-
 EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS')
 EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
-# ============================================
 
-# Initialize email service
-if USE_REAL_EMAIL and EMAIL_ADDRESS and EMAIL_PASSWORD:
+# Use real email service
+if EMAIL_ADDRESS and EMAIL_PASSWORD:
     email_service = EmailService(EMAIL_ADDRESS, EMAIL_PASSWORD)
     print("✅ Using REAL email service")
 else:
     email_service = MockEmailService()
-    print("⚠️ Using MOCK email service (OTP in console)")
+    print("⚠️ Using MOCK email service")
 
 otp_storage = {}
 
@@ -34,8 +30,6 @@ def send_otp():
     try:
         data = request.json
         email = data.get('email')
-        
-        print(f"📧 Sending OTP to: {email}")
         
         if not email:
             return jsonify({'success': False, 'error': 'Email required'}), 400
@@ -48,19 +42,18 @@ def send_otp():
             'verified': False
         }
         
-        # Send email
-        result = email_service.send_otp_email(email, otp)
-        
-        if result:
+        # ✅ FIXED: Use correct method name
+        if email_service.send_registration_otp(email, otp):
             return jsonify({'success': True, 'message': 'OTP sent to your email!'})
         else:
             return jsonify({'success': False, 'error': 'Failed to send OTP'}), 500
     
     except Exception as e:
-        print(f"❌ OTP Error: {e}")
-        traceback.print_exc()  # This will print full error in logs
+        print(f"Error: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'success': False, 'error': str(e)}), 500
-    
+
 @otp_bp.route('/verify', methods=['POST'])
 def verify_otp():
     try:
