@@ -3,6 +3,7 @@ from datetime import datetime
 import sys
 import os
 from dotenv import load_dotenv
+import traceback
 
 load_dotenv()
 
@@ -34,6 +35,8 @@ def send_otp():
         data = request.json
         email = data.get('email')
         
+        print(f"📧 Sending OTP to: {email}")
+        
         if not email:
             return jsonify({'success': False, 'error': 'Email required'}), 400
         
@@ -45,14 +48,19 @@ def send_otp():
             'verified': False
         }
         
-        if email_service.send_registration_otp(email, otp):
+        # Send email
+        result = email_service.send_otp_email(email, otp)
+        
+        if result:
             return jsonify({'success': True, 'message': 'OTP sent to your email!'})
         else:
             return jsonify({'success': False, 'error': 'Failed to send OTP'}), 500
     
     except Exception as e:
+        print(f"❌ OTP Error: {e}")
+        traceback.print_exc()  # This will print full error in logs
         return jsonify({'success': False, 'error': str(e)}), 500
-
+    
 @otp_bp.route('/verify', methods=['POST'])
 def verify_otp():
     try:
