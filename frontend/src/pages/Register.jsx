@@ -62,7 +62,7 @@ const Register = () => {
     setError('');
     
     try {
-      const response = await fetch('http://localhost:5000/api/otp/send', {
+      const response = await fetch('https://breast-candetector.onrender.com/api/otp/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.email }),
@@ -96,7 +96,7 @@ const Register = () => {
     
     try {
       // Verify OTP
-      const verifyResponse = await fetch('http://localhost:5000/api/otp/verify', {
+      const verifyResponse = await fetch('https://breast-candetector.onrender.com/api/otp/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -114,7 +114,7 @@ const Register = () => {
       }
       
       // Register user
-      const registerResponse = await fetch('http://localhost:5000/api/auth/register', {
+      const registerResponse = await fetch('https://breast-candetector.onrender.com/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

@@ -14,7 +14,6 @@ const ForgotPassword = () => {
   const [timer, setTimer] = useState(0);
   const [timerInterval, setTimerInterval] = useState(null);
 
-  // Clear timer function
   const clearTimer = () => {
     if (timerInterval) {
       clearInterval(timerInterval);
@@ -23,9 +22,8 @@ const ForgotPassword = () => {
     setTimer(0);
   };
 
-  // Start timer function
   const startTimer = () => {
-    clearTimer(); // Clear any existing timer first
+    clearTimer();
     let timeLeft = 300;
     setTimer(timeLeft);
     
@@ -53,7 +51,8 @@ const ForgotPassword = () => {
     setSuccess('');
     
     try {
-      const response = await fetch('http://localhost:5000/api/forgot-password/send-otp', {
+      // ✅ FIXED: Render URL
+      const response = await fetch('https://breast-candetector.onrender.com/api/forgot-password/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -63,7 +62,7 @@ const ForgotPassword = () => {
       
       if (data.success) {
         setStep(2);
-        startTimer(); // Start fresh timer
+        startTimer();
         setSuccess('OTP sent to your email!');
       } else {
         setError(data.error || 'Email not found');
@@ -86,7 +85,8 @@ const ForgotPassword = () => {
     setError('');
     
     try {
-      const response = await fetch('http://localhost:5000/api/forgot-password/verify-otp', {
+      // ✅ FIXED: Render URL
+      const response = await fetch('https://breast-candetector.onrender.com/api/forgot-password/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp }),
@@ -95,7 +95,7 @@ const ForgotPassword = () => {
       const data = await response.json();
       
       if (data.success) {
-        clearTimer(); // Stop timer on success
+        clearTimer();
         setStep(3);
         setSuccess('OTP verified! Set new password');
       } else {
@@ -125,7 +125,8 @@ const ForgotPassword = () => {
     setError('');
     
     try {
-      const response = await fetch('http://localhost:5000/api/forgot-password/reset', {
+      // ✅ FIXED: Render URL
+      const response = await fetch('https://breast-candetector.onrender.com/api/forgot-password/reset', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, newPassword }),
@@ -147,7 +148,7 @@ const ForgotPassword = () => {
   };
 
   const handleBack = () => {
-    clearTimer(); // Stop timer
+    clearTimer();
     setStep(1);
     setSuccess('');
     setError('');

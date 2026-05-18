@@ -64,7 +64,7 @@ const PatientForm = ({ onComplete }) => {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
       if (user?.email) {
         try {
-          const response = await fetch('http://localhost:5000/api/patient/save', {
+          const response = await fetch('https://breast-candetector.onrender.com/api/patient/save', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
