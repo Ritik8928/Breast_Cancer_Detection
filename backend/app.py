@@ -26,7 +26,6 @@ cors_origins = [origin.strip() for origin in cors_origins_str.split(',') if orig
 default_origins = [
     'http://localhost:3000',
     'http://localhost:5000',
-    'https://flask-hello-world-a01be83f.containers.snapdeploy.dev/'
 
 ]
 
