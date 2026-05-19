@@ -12,7 +12,7 @@ load_dotenv()
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from routes.auth import auth_bp
+from backend.routes.auth import auth_bp
 from routes.predict import predict_bp
 from routes.otp import otp_bp
 
@@ -26,7 +26,6 @@ cors_origins = [origin.strip() for origin in cors_origins_str.split(',') if orig
 default_origins = [
     'http://localhost:3000',
     'http://localhost:5000',
-    'https://flask-hello-world-a01be83f.containers.snapdeploy.dev'
 ]
 
 # Combine and remove duplicates
