@@ -8,7 +8,8 @@ load_dotenv()
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from services.email_services import ResendEmailService as EmailService
+# ✅ Import only ResendEmailService
+from services.email_services import ResendEmailService
 
 otp_bp = Blueprint('otp', __name__)
 
@@ -16,11 +17,12 @@ otp_bp = Blueprint('otp', __name__)
 RESEND_API_KEY = os.getenv('RESEND_API_KEY')
 
 # Initialize email service
-if not RESEND_API_KEY:
-    raise ValueError("❌ RESEND_API_KEY is missing!")
-
-email_service = ResendEmailService(RESEND_API_KEY)
-print("✅ Using Resend email service")
+if RESEND_API_KEY:
+    email_service = ResendEmailService(RESEND_API_KEY)
+    print("✅ Using Resend email service")
+else:
+    print("❌ RESEND_API_KEY not set! OTP will not work.")
+    email_service = None
 
 otp_storage = {}
 
@@ -32,6 +34,9 @@ def send_otp():
         
         if not email:
             return jsonify({'success': False, 'error': 'Email required'}), 400
+        
+        if not email_service:
+            return jsonify({'success': False, 'error': 'Email service not configured'}), 500
         
         otp = email_service.generate_otp()
         
