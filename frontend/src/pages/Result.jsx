@@ -4,9 +4,8 @@ import { useNavigate } from 'react-router-dom';
 const Result = () => {
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
-  const [userData, setUserData] = useState(null);
   const [inputData, setInputData] = useState(null);
-  const [patientData, setPatientData] = useState(null);  // ← ADD THIS
+  const [patientData, setPatientData] = useState(null);  
   const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
@@ -25,10 +24,6 @@ const Result = () => {
       } else {
         navigate('/predict');
         return;
-      }
-      
-      if (storedUser && storedUser !== 'undefined') {
-        setUserData(JSON.parse(storedUser));
       }
       
       if (storedInput && storedInput !== 'undefined') {
