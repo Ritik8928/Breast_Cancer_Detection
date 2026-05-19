@@ -5,18 +5,14 @@ const Result = () => {
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
   const [inputData, setInputData] = useState(null);
-  const [patientData, setPatientData] = useState(null);  
+  const [patientData, setPatientData] = useState(null);
   const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
     try {
-      // Safe way to get data from localStorage
       const storedResult = localStorage.getItem('predictionResult');
-      const storedUser = localStorage.getItem('user');
       const storedInput = localStorage.getItem('inputData');
-      const storedPatient = localStorage.getItem('patientInfo');  // ← ADD THIS
-      
-      console.log("Stored result:", storedResult);
+      const storedPatient = localStorage.getItem('patientInfo');
       
       if (storedResult && storedResult !== 'undefined') {
         setResult(JSON.parse(storedResult));
@@ -30,7 +26,7 @@ const Result = () => {
         setInputData(JSON.parse(storedInput));
       }
       
-      if (storedPatient && storedPatient !== 'undefined') {  // ← ADD THIS
+      if (storedPatient && storedPatient !== 'undefined') {
         setPatientData(JSON.parse(storedPatient));
       }
     } catch (error) {
@@ -179,36 +175,24 @@ const Result = () => {
         </div>
       </div>
 
-      {/* Print Report View - Single Page Stylish */}
+      {/* Print Report View */}
       <div className="print-report" style={{ display: 'none' }}>
         <div className="print-report-container">
-          {/* Header */}
           <div className="print-header">
-            <div className="print-logo">🏥</div>
-            <h1>Breast Cancer Detection Report</h1>
-            <p className="print-subtitle">AI-Powered Risk Assessment | Breast Cancer Detection</p>
-            <div className="print-divider"></div>
+            <h1>🩺 Breast Cancer Detection Report</h1>
+            <p className="print-subtitle">AI-Powered Risk Assessment Report</p>
+            <p className="print-date">Report Date: {new Date().toLocaleDateString()}</p>
           </div>
 
-          {/* Report ID and Date */}
-          <div className="print-meta">
-            <div>Report ID: <strong>ML-{Date.now()}-{Math.random().toString(36).substr(2, 6).toUpperCase()}</strong></div>
-            <div>Date: <strong>{new Date().toLocaleDateString()}</strong></div>
-          </div>
-
-          {/* Patient Information Card */}
-          <div className="print-card">
-            <div className="print-card-header">
-              <span className="print-card-icon">👤</span>
-              <h3>Patient Information</h3>
-            </div>
-            <table className="print-info-table">
+          <div className="print-section">
+            <h2>Patient Information</h2>
+            <table className="print-table">
               <tbody>
                 <tr>
                   <td className="print-label">Full Name:</td>
-                  <td className="print-value"><strong>{patientData?.patientName || 'Not provided'}</strong></td>
+                  <td className="print-value">{patientData?.patientName || 'Not provided'}</td>
                   <td className="print-label">Age:</td>
-                  <td className="print-value">{patientData?.patientAge || 'Not provided'} years</td>
+                  <td className="print-value">{patientData?.patientAge || 'Not provided'}</td>
                 </tr>
                 <tr>
                   <td className="print-label">Date of Birth:</td>
@@ -226,12 +210,8 @@ const Result = () => {
             </table>
           </div>
 
-          {/* Clinical Parameters Card */}
-          <div className="print-card">
-            <div className="print-card-header">
-              <span className="print-card-icon">🔬</span>
-              <h3>Clinical Parameters</h3>
-            </div>
+          <div className="print-section">
+            <h2>Clinical Parameters Analyzed</h2>
             <div className="print-params-grid">
               {inputData && Object.entries(inputData).map(([key, value]) => (
                 <div className="print-param-item" key={key}>
@@ -242,7 +222,6 @@ const Result = () => {
             </div>
           </div>
 
-          {/* Prediction Result Card */}
           <div className={`print-result-card ${isPositive ? 'print-positive' : 'print-negative'}`}>
             <div className="print-result-icon">{isPositive ? '⚠️' : '✅'}</div>
             <div className="print-result-content">
@@ -254,7 +233,6 @@ const Result = () => {
             </div>
           </div>
 
-          {/* Recommendations Card */}
           <div className="print-card">
             <div className="print-card-header">
               <span className="print-card-icon">📋</span>
@@ -267,7 +245,6 @@ const Result = () => {
             </ul>
           </div>
 
-          {/* Footer */}
           <div className="print-footer">
             <p>⚠️ This is an AI-powered prediction tool. Please consult a healthcare professional for medical advice.</p>
             <p>© 2024 ML Project Hub - Breast Cancer Detection System</p>
