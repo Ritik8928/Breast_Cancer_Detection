@@ -54,7 +54,7 @@ class ResendEmailService:
                         <h2 style="text-align: center;">Password Reset</h2>
                         <p>Your OTP for password reset is:</p>
                         <div style="text-align: center; margin: 30px 0;">
-                            <span style="font-size: 36px; font-weight: bold; letter-spacing: 5px; background: white; color: #c92a2a; padding: 15px 30px; border-radius: 5px;">{otp}</span>
+                      s      <span style="font-size: 36px; font-weight: bold; letter-spacing: 5px; background: white; color: #c92a2a; padding: 15px 30px; border-radius: 5px;">{otp}</span>
                         </div>
                         <p>This OTP is valid for 5 minutes.</p>
                         <p>If you didn't request this, please ignore this email.</p>

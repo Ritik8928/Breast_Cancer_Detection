@@ -8,7 +8,7 @@ load_dotenv()
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from services.resend_service import ResendEmailService as EmailService
+from services.email_services import ResendEmailService as EmailService
 from services.email_services import MockEmailService
 
 otp_bp = Blueprint('otp', __name__)

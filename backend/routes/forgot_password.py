@@ -5,7 +5,7 @@ import sys
 import os
 from dotenv import load_dotenv
 from services.user_services import UserService
-from services.email_services import ResendEmailService as EmailService
+from services.email_services import ResendEmailService
 
 # Load .env
 dotenv_path = r"D:\Projects\Breast_Cancer_Detection\.env"
@@ -13,22 +13,20 @@ load_dotenv(dotenv_path)
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from services.user_services import UserService
-from services.email_services import EmailService
-
 forgot_bp = Blueprint('forgot', __name__)
 
-EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS')
-EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
+EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 
 print(f"📧 Email: {EMAIL_ADDRESS}")
-print(f"📧 Password loaded: {bool(EMAIL_PASSWORD)}")
+
 
 # Initialize email service
-if EMAIL_ADDRESS and EMAIL_PASSWORD:
-    email_service = EmailService(EMAIL_ADDRESS, EMAIL_PASSWORD)
+if EMAIL_ADDRESS and RESEND_API_KEY:
+    email_service = ResendEmailService(RESEND_API_KEY)
+    print("✅ Resend Email Service Initialized")
 else:
-    print("❌ Email credentials missing!")
+    print("❌ Resend configuration missing!")
     email_service = None
 
 reset_otp_storage = {}
