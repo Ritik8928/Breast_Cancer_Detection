@@ -27,6 +27,7 @@ default_origins = [
     'http://localhost:3000',
     'http://localhost:5000',
     'https://breast-cancer-detection-gthe.onrender.com'
+    'https://breast-cancer-detection-one.vercel.app'
 ]
 
 # Combine and remove duplicates
