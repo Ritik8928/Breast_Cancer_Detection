@@ -1,73 +1,77 @@
-from flask import Blueprint, request, jsonify
-import random
-import numpy as np
+import joblib
 import pandas as pd
 import os
-import sys
 
-# Create blueprint
-predict_bp = Blueprint('predict', __name__)
 
-# Add parent directory to path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+class MLService:
+    def __init__(self, model_path=None, preprocessor_path=None):
+        """Initialize ML Service with model and preprocessor"""
 
-# Try to load ML service
-try:
-    from services.ml_services import MLService, MockMLService
-    
-    MODEL_PATH = os.path.join('artifacts', 'model.pkl')
-    PREPROCESSOR_PATH = os.path.join('artifacts', 'preprocessor.pkl')
-    
-    if os.path.exists(MODEL_PATH):
-        ml_service = MLService(MODEL_PATH, PREPROCESSOR_PATH)
-        print("✅ Using real ML model")
-        use_real_service = True
-    else:
-        ml_service = MockMLService()
-        print("⚠️ Using mock ML model")
-        use_real_service = True
-        
-except Exception as e:
-    print(f"⚠️ Could not load ML service: {e}")
-    print("⚠️ Using simple mock predictions")
-    use_real_service = False
+        self.model = None
+        self.preprocessor = None
 
-# Simple prediction function (fallback)
-def simple_predict(data):
-    prediction = random.choice([0, 1])
-    confidence = random.uniform(0.7, 0.95)
-    return prediction, confidence
+        # Load model
+        if not model_path or not os.path.exists(model_path):
+            raise FileNotFoundError(f"❌ Model file not found: {model_path}")
 
-@predict_bp.route('/', methods=['POST'])
-def predict():
-    try:
-        data = request.json
-        print("="*50)
-        print("📊 Prediction request received")
-        print(f"📊 Data keys: {list(data.keys()) if data else 'None'}")
-        print("="*50)
-        
-        if use_real_service:
-            result = ml_service.predict(data)
-            return jsonify(result)
-        else:
-            prediction, confidence = simple_predict(data)
-            return jsonify({
+        try:
+            self.model = joblib.load(model_path)
+            print(f"✅ Model loaded from {model_path}")
+        except Exception as e:
+            raise Exception(f"❌ Error loading model: {e}")
+
+        # Load preprocessor
+        if not preprocessor_path or not os.path.exists(preprocessor_path):
+            raise FileNotFoundError(f"❌ Preprocessor file not found: {preprocessor_path}")
+
+        try:
+            self.preprocessor = joblib.load(preprocessor_path)
+            print(f"✅ Preprocessor loaded from {preprocessor_path}")
+        except Exception as e:
+            raise Exception(f"❌ Error loading preprocessor: {e}")
+
+    def predict(self, data_dict):
+        """Make prediction for single input"""
+
+        try:
+            # Convert frontend data to DataFrame
+            df = pd.DataFrame([{
+                'Age': int(data_dict.get('Age', 0)),
+                'Tumour_Size': float(data_dict.get('Tumour_Size', 0)),
+                'Regional_nodes_examined': int(data_dict.get('Regional_nodes_examined', 0)),
+                'Regional_nodes_positive': int(data_dict.get('Regional_nodes_positive', 0)),
+                'Race': data_dict.get('Race', 'White'),
+                'Martial_Status': data_dict.get('Martial_Status', 'Single'),
+                'T_Stage': data_dict.get('T_Stage', 'Stage I'),
+                'N_Stage': data_dict.get('N_Stage', 'Stage I'),
+                'Sixth_Stage': data_dict.get('Sixth_Stage', 'Stage I'),
+                'Estrogen_Status': data_dict.get('Estrogen_Status', 'Positive'),
+                'Progesterone_Status': data_dict.get('Progesterone_Status', 'Positive')
+            }])
+
+            # Apply preprocessing
+            processed_data = self.preprocessor.transform(df)
+
+            # Prediction
+            prediction = self.model.predict(processed_data)
+
+            # Probability
+            if hasattr(self.model, 'predict_proba'):
+                prediction_proba = self.model.predict_proba(processed_data)
+                confidence = float(prediction_proba[0][1])
+            else:
+                confidence = 0.0
+
+            return {
                 'success': True,
-                'prediction': int(prediction),
-                'confidence': float(confidence)
-            })
-    
-    except Exception as e:
-        print(f"❌ Prediction error: {e}")
-        import traceback
-        traceback.print_exc()
-        return jsonify({'success': False, 'error': str(e)}), 500
+                'prediction': int(prediction[0]),
+                'confidence': confidence
+            }
 
-@predict_bp.route('/health', methods=['GET'])
-def health():
-    return jsonify({
-        'success': True,
-        'status': 'healthy',
-        'service_ready': use_real_service
-    })
+        except Exception as e:
+            print(f"❌ Prediction error: {e}")
+
+            return {
+                'success': False,
+                'error': str(e)
+            }
