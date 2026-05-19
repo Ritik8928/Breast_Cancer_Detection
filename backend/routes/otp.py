@@ -8,22 +8,21 @@ load_dotenv()
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# ✅ Import only ResendEmailService
-from services.email_services import ResendEmailService
-
-otp_bp = Blueprint('otp', __name__)
-
-# Get Resend API key from environment
-RESEND_API_KEY = os.getenv('RESEND_API_KEY')
-
-# Initialize email service
-if RESEND_API_KEY:
-    email_service = ResendEmailService(RESEND_API_KEY)
-    print("✅ Using Resend email service")
-else:
-    print("❌ RESEND_API_KEY not set! OTP will not work.")
+# Try to import, with fallback
+try:
+    from services.email_services import ResendEmailService
+    RESEND_API_KEY = os.getenv('RESEND_API_KEY')
+    if RESEND_API_KEY:
+        email_service = ResendEmailService(RESEND_API_KEY)
+        print("✅ Using Resend email service")
+    else:
+        print("❌ RESEND_API_KEY not set")
+        email_service = None
+except ImportError as e:
+    print(f"❌ Import error: {e}")
     email_service = None
 
+otp_bp = Blueprint('otp', __name__)
 otp_storage = {}
 
 @otp_bp.route('/send', methods=['POST'])

@@ -13,14 +13,8 @@ class ResendEmailService:
             params = {
                 "from": self.from_email,
                 "to": [to_email],
-                "subject": "🔐 Verify Your Email - Breast Cancer Detection",
-                "html": f"""
-                <div style="font-family: Arial, sans-serif; padding: 20px;">
-                    <h2>Your OTP Code</h2>
-                    <p>Your OTP for registration is: <strong>{otp}</strong></p>
-                    <p>Valid for 5 minutes.</p>
-                </div>
-                """
+                "subject": "🔐 Verify Your Email",
+                "html": f"<h2>Your OTP is: {otp}</h2><p>Valid for 5 minutes.</p>"
             }
             resend.Emails.send(params)
             print(f"✅ OTP sent to {to_email}")
@@ -34,14 +28,8 @@ class ResendEmailService:
             params = {
                 "from": self.from_email,
                 "to": [to_email],
-                "subject": "🔐 Password Reset Request",
-                "html": f"""
-                <div style="font-family: Arial, sans-serif; padding: 20px;">
-                    <h2>Password Reset</h2>
-                    <p>Your OTP for password reset is: <strong>{otp}</strong></p>
-                    <p>Valid for 5 minutes.</p>
-                </div>
-                """
+                "subject": "🔐 Password Reset",
+                "html": f"<h2>Your OTP is: {otp}</h2><p>Valid for 5 minutes.</p>"
             }
             resend.Emails.send(params)
             print(f"✅ Password reset OTP sent to {to_email}")
