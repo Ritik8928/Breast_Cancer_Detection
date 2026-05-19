@@ -13,7 +13,7 @@ const Login = () => {
     setError('');
     
     try {
-      const response = await fetch('https://breast-candetector.onrender.com/api/auth/login', {
+      const response = await fetch('https://flask-hello-world-a01be83f.containers.snapdeploy.dev/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

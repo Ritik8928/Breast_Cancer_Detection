@@ -64,7 +64,7 @@ const PatientForm = ({ onComplete }) => {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
       if (user?.email) {
         try {
-          const response = await fetch('https://breast-candetector.onrender.com/api/patient/save', {
+          const response = await fetch('https://flask-hello-world-a01be83f.containers.snapdeploy.dev/api/patient/save', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

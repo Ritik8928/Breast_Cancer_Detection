@@ -29,7 +29,7 @@ const Predict = () => {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
       if (user?.email) {
         try {
-          const response = await fetch(`https://breast-candetector.onrender.com/api/patient/get/${user.email}`);
+          const response = await fetch(`https://flask-hello-world-a01be83f.containers.snapdeploy.dev/api/patient/get/${user.email}`);
           const result = await response.json();
           if (result.success && result.data) {
             setPatientData(result.data.patientData);
@@ -86,7 +86,7 @@ const Predict = () => {
     setLoading(true);
     
     try {
-      const response = await axios.post('https://breast-candetector.onrender.com/api/predict/', formData);
+      const response = await axios.post('https://flask-hello-world-a01be83f.containers.snapdeploy.dev/api/predict/', formData);
       
       if (response.data.success) {
         // Save all data

@@ -52,7 +52,7 @@ const ForgotPassword = () => {
     
     try {
       // ✅ FIXED: Render URL
-      const response = await fetch('https://breast-candetector.onrender.com/api/forgot-password/send-otp', {
+      const response = await fetch('https://flask-hello-world-a01be83f.containers.snapdeploy.dev/api/forgot-password/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -86,7 +86,7 @@ const ForgotPassword = () => {
     
     try {
       // ✅ FIXED: Render URL
-      const response = await fetch('https://breast-candetector.onrender.com/api/forgot-password/verify-otp', {
+      const response = await fetch('https://flask-hello-world-a01be83f.containers.snapdeploy.dev/api/forgot-password/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp }),
@@ -126,7 +126,7 @@ const ForgotPassword = () => {
     
     try {
       // ✅ FIXED: Render URL
-      const response = await fetch('https://breast-candetector.onrender.com/api/forgot-password/reset', {
+      const response = await fetch('https://flask-hello-world-a01be83f.containers.snapdeploy.dev/api/forgot-password/reset', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, newPassword }),

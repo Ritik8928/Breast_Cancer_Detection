@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Production API URL (Render Backend)
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://breast-candetector.onrender.com/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://flask-hello-world-a01be83f.containers.snapdeploy.dev/api';
 
 // Register new user via backend
 export const registerUser = async (userData) => {

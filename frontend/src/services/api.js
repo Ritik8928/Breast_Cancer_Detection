@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://breast-candetector.onrender.com/api';
+const API_BASE_URL = 'https://flask-hello-world-a01be83f.containers.snapdeploy.dev/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
