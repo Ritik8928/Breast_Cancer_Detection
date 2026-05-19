@@ -8,8 +8,7 @@ load_dotenv()
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# ✅ Use Resend instead of Gmail
-from services.resend_service import ResendEmailService
+from services.resend_service import ResendEmailService as EmailService
 from services.email_services import MockEmailService
 
 otp_bp = Blueprint('otp', __name__)

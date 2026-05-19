@@ -4,6 +4,8 @@ from datetime import datetime
 import sys
 import os
 from dotenv import load_dotenv
+from services.user_services import UserService
+from services.email_services import ResendEmailService as EmailService
 
 # Load .env
 dotenv_path = r"D:\Projects\Breast_Cancer_Detection\.env"
