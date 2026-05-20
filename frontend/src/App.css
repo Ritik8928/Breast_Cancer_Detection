@@ -573,7 +573,7 @@ body {
 }
 
 /* ======================================== */
-/* DASHBOARD PAGE - MATCHING YOUR JSX */
+/* DASHBOARD PAGE - COMPLETE FIXED */
 /* ======================================== */
 
 .dashboard-modern {
@@ -601,19 +601,20 @@ body {
 }
 
 .subtitle {
-  color: rgba(255,255,255,0.7);
+  color: #E4D6A9 !important;
   font-size: 1rem;
 }
 
+/* Date Card */
 .date-card {
   display: flex;
   align-items: center;
   gap: 15px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.3);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 12px 25px;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(228,214,169,0.3);
 }
 
 .date-icon {
@@ -622,13 +623,13 @@ body {
 
 .date {
   font-size: 0.9rem;
-  color: rgba(255,255,255,0.8);
+  color: #E4D6A9 !important;
 }
 
 .time {
   font-size: 1.3rem;
   font-weight: bold;
-  color: #E4D6A9;
+  color: #E4D6A9 !important;
 }
 
 /* Stats Grid */
@@ -640,9 +641,9 @@ body {
 }
 
 .stat-card {
-  background: rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.3);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(228,214,169,0.3);
   border-radius: 20px;
   padding: 25px;
   text-align: center;
@@ -652,7 +653,7 @@ body {
 
 .stat-card:hover {
   transform: translateY(-8px);
-  background: rgba(228,214,169,0.15);
+  background: rgba(228,214,169,0.2);
   border-color: #E4D6A9;
 }
 
@@ -664,13 +665,13 @@ body {
 .stat-value {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #E4D6A9;
+  color: #E4D6A9 !important;
   margin-bottom: 5px;
 }
 
 .stat-label {
   font-size: 0.85rem;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.9) !important;
 }
 
 /* Action Card */
@@ -700,12 +701,12 @@ body {
 
 .action-text h2 {
   font-size: 1.5rem;
-  color: white;
+  color: white !important;
   margin-bottom: 8px;
 }
 
 .action-text p {
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.9) !important;
 }
 
 .glow-button {
@@ -746,13 +747,13 @@ body {
 }
 
 .tab-btn.active {
-  background: rgba(228,214,169,0.2);
+  background: rgba(228,214,169,0.3);
   border: 1px solid #E4D6A9;
   color: #E4D6A9;
 }
 
 .tab-btn:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.2);
 }
 
 /* Tab Content */
@@ -760,7 +761,7 @@ body {
   min-height: 300px;
 }
 
-/* Info Grid (Overview) */
+/* Info Grid */
 .info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -769,11 +770,12 @@ body {
 }
 
 .info-card {
-  background: rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.3);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 25px;
   transition: all 0.3s;
+  border: 1px solid rgba(228,214,169,0.2);
 }
 
 .info-card:hover {
@@ -787,13 +789,13 @@ body {
 }
 
 .info-card h3 {
-  color: #E4D6A9;
+  color: #E4D6A9 !important;
   margin-bottom: 10px;
   font-size: 1.2rem;
 }
 
 .info-card p {
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.9) !important;
   line-height: 1.6;
   font-size: 0.9rem;
 }
@@ -810,11 +812,12 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
-  background: rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.3);
   backdrop-filter: blur(10px);
   border-radius: 15px;
   padding: 15px 20px;
   transition: all 0.3s;
+  border: 1px solid rgba(228,214,169,0.2);
 }
 
 .tip-card:hover {
@@ -827,7 +830,7 @@ body {
 }
 
 .tip-text {
-  color: white;
+  color: white !important;
   font-size: 0.95rem;
 }
 
@@ -843,11 +846,12 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
-  background: rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.3);
   backdrop-filter: blur(10px);
   border-radius: 15px;
   padding: 15px 20px;
   transition: all 0.3s;
+  border: 1px solid rgba(228,214,169,0.2);
 }
 
 .warning-card:hover {
@@ -860,7 +864,7 @@ body {
 }
 
 .warning-text {
-  color: white;
+  color: white !important;
   font-size: 0.95rem;
 }
 
@@ -876,11 +880,12 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
-  background: rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.3);
   backdrop-filter: blur(10px);
   border-radius: 15px;
   padding: 15px 20px;
   transition: all 0.3s;
+  border: 1px solid rgba(228,214,169,0.2);
 }
 
 .prevention-card:hover {
@@ -893,7 +898,7 @@ body {
 }
 
 .prevention-text {
-  color: white;
+  color: white !important;
   font-size: 0.95rem;
 }
 
@@ -906,17 +911,9 @@ body {
 }
 
 .dashboard-footer p {
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.7);
   font-size: 0.8rem;
   margin: 5px 0;
-}
-
-/* Glass effect */
-.glass {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 20px;
 }
 
 /* Responsive */
