@@ -4,7 +4,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Dashboard from './pages/Dashboard';
 import Predict from './pages/Predict';
-import PatientForm from './pages/PatientForm';
+import PatientForm from './pages/Patientform';
 import Result from './pages/Result';
 import './styles/App.css';
 
@@ -17,7 +17,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/predict" element={<Predict />} />
-          <Route path="/patient-form" element={<PatientForm />} />
+          <Route path="/patient-form" element={<Patientform />} />
           <Route path="/result" element={<Result />} />
         </Routes>
       </div>
