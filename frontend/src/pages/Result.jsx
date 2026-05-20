@@ -6,7 +6,7 @@ const Result = () => {
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
   const [patientData, setPatientData] = useState(null);
-  const [inputData, setInputData] = useState(null);
+  
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,9 +24,6 @@ const Result = () => {
       }
       if (storedPatient) {
         setPatientData(JSON.parse(storedPatient));
-      }
-      if (storedInput) {
-        setInputData(JSON.parse(storedInput));
       }
       
       setLoading(false);
