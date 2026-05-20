@@ -1,28 +1,57 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const About = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="about-container">
       <div className="about-card">
-        <h1>About This Project</h1>
-        <p>This AI-powered system helps detect breast cancer risk using machine learning.</p>
+        <h1>About ML Project Hub</h1>
         
-        <h3>Features</h3>
+        {/* Founder Section */}
+        <div className="founder-section">
+          <div className="founder-avatar">👨‍💻</div>
+          <h2>Ritik Vishwakarma</h2>
+          <p className="founder-title">Founder & Full Stack Developer</p>
+          <p className="founder-bio">
+            Passionate about using AI and machine learning to solve real-world healthcare problems. 
+            This project aims to make breast cancer screening more accessible and accurate.
+          </p>
+          <div className="founder-contact">
+            <a href="mailto:ritikvishwakarma6595@gmail.com">📧 ritikvishwakarma6595@gmail.com</a>
+            <a href="https://github.com/Ritik8928" target="_blank" rel="noopener noreferrer">🔗 GitHub</a>
+          </div>
+        </div>
+
+        {/* Project Info */}
+        <h3>🎯 Project Mission</h3>
+        <p>
+          To make breast cancer screening more accessible and accurate using cutting-edge technology, 
+          ultimately contributing to early detection and better patient outcomes.
+        </p>
+
+        <h3>🛠️ Technology Stack</h3>
         <ul>
-          <li>95% accurate ML model</li>
-          <li>11 clinical parameters</li>
-          <li>Instant results</li>
-          <li>PDF report download</li>
+          <li>Frontend: React.js</li>
+          <li>Backend: Flask (Python)</li>
+          <li>ML Model: Scikit-learn</li>
+          <li>Deployment: Render + Vercel</li>
         </ul>
-        
-        <h3>Technology</h3>
+
+        <h3>📊 Model Accuracy</h3>
+        <p>95% accuracy on test data, trained on clinical breast cancer datasets.</p>
+
+        <h3>📋 Parameters Analyzed</h3>
         <ul>
-          <li>React Frontend</li>
-          <li>Flask Backend</li>
-          <li>Scikit-learn ML Model</li>
+          <li>Age and Tumour Size</li>
+          <li>Regional Nodes (Examined & Positive)</li>
+          <li>Race and Marital Status</li>
+          <li>T Stage, N Stage, Sixth Stage</li>
+          <li>Estrogen & Progesterone Status</li>
         </ul>
-        
-        <button onClick={() => window.location.href = '/'}>Back to Home</button>
+
+        <button className="about-back-btn" onClick={() => navigate('/')}>Back to Home</button>
       </div>
     </div>
   );
