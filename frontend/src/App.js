@@ -4,7 +4,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Dashboard from './pages/Dashboard';
 import Predict from './pages/Predict';
-import PatientForm from './pages/Patientform';
+import Patientform from './pages/Patientform';
 import Result from './pages/Result';
 import './styles/App.css';
 
