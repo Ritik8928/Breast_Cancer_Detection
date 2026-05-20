@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 const Home = () => {
   const navigate = useNavigate();
   const [text, setText] = useState('');
+  const [showCursor, setShowCursor] = useState(true);
   const fullText = 'AI-Powered Early Detection';
 
   useEffect(() => {
@@ -11,35 +12,29 @@ const Home = () => {
     const typingInterval = setInterval(() => {
       setText(fullText.slice(0, i + 1));
       i++;
-      if (i === fullText.length) clearInterval(typingInterval);
+      if (i === fullText.length) {
+        clearInterval(typingInterval);
+        // Typing complete, hide cursor after 500ms
+        setTimeout(() => {
+          setShowCursor(false);
+        }, 500);
+      }
     }, 100);
     return () => clearInterval(typingInterval);
   }, []);
 
-  const handleGetStarted = () => {
-    navigate('/patient-form');
-  };
-
-  const features = [
-    { icon: "🎯", title: "95% Accuracy", desc: "Trained on clinical datasets" },
-    { icon: "⚡", title: "Instant Results", desc: "Get prediction in seconds" },
-    { icon: "📄", title: "PDF Report", desc: "Download detailed analysis" },
-    { icon: "🔒", title: "No Login", desc: "100% free to use" },
-  ];
-
   return (
     <div className="home-modern">
-      {/* Hero Section */}
       <div className="hero-modern">
         <div className="hero-badge">
           <span className="badge-icon">🧬</span>
-          <span>ML Project Hub</span>
+          <span>Breast Cancer Detector</span>
         </div>
         
         <h1 className="hero-title">
           Breast Cancer<br />
           <span className="typing-text">{text}</span>
-          <span className="cursor">|</span>
+          {showCursor && <span className="cursor">|</span>}
         </h1>
         
         <p className="hero-subtitle">
@@ -48,7 +43,7 @@ const Home = () => {
         </p>
         
         <div className="hero-buttons">
-          <button className="hero-button primary" onClick={handleGetStarted}>
+          <button className="hero-button primary" onClick={() => navigate('/patient-form')}>
             Get Started
           </button>
           <button className="hero-button secondary" onClick={() => navigate('/dashboard')}>
@@ -56,7 +51,6 @@ const Home = () => {
           </button>
         </div>
 
-        {/* Stats */}
         <div className="hero-stats">
           <div className="hero-stat">
             <div className="hero-stat-icon">🎯</div>
@@ -82,15 +76,27 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Features Section */}
       <div className="features-modern">
-        {features.map((feature, index) => (
-          <div key={index} className="feature-modern glass">
-            <div className="feature-modern-icon">{feature.icon}</div>
-            <h3>{feature.title}</h3>
-            <p>{feature.desc}</p>
-          </div>
-        ))}
+        <div className="feature-modern glass">
+          <div className="feature-modern-icon">🎯</div>
+          <h3>95% Accuracy</h3>
+          <p>Trained on clinical datasets</p>
+        </div>
+        <div className="feature-modern glass">
+          <div className="feature-modern-icon">⚡</div>
+          <h3>Instant Results</h3>
+          <p>Get prediction in seconds</p>
+        </div>
+        <div className="feature-modern glass">
+          <div className="feature-modern-icon">📄</div>
+          <h3>PDF Report</h3>
+          <p>Download detailed analysis</p>
+        </div>
+        <div className="feature-modern glass">
+          <div className="feature-modern-icon">🔒</div>
+          <h3>No Login</h3>
+          <p>100% free to use</p>
+        </div>
       </div>
     </div>
   );
