@@ -4,28 +4,21 @@ import { useNavigate } from 'react-router-dom';
 const Home = () => {
   const navigate = useNavigate();
   const [text, setText] = useState('');
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const fullText = 'AI-Powered Early Detection';
 
   useEffect(() => {
-    // Typing effect
     let i = 0;
     const typingInterval = setInterval(() => {
       setText(fullText.slice(0, i + 1));
       i++;
       if (i === fullText.length) clearInterval(typingInterval);
     }, 100);
-    
     return () => clearInterval(typingInterval);
   }, []);
 
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  const handleGetStarted = () => {
+    navigate('/patient-form');
+  };
 
   const features = [
     { icon: "🎯", title: "95% Accuracy", desc: "Trained on clinical datasets" },
@@ -36,89 +29,68 @@ const Home = () => {
 
   return (
     <div className="home-modern">
-      {/* Animated Background with Mouse Follow */}
-      <div className="animated-bg">
-        <div className="gradient-sphere" style={{ transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)` }}></div>
-        <div className="gradient-sphere-2" style={{ transform: `translate(${-mousePosition.x * 0.01}px, ${-mousePosition.y * 0.01}px)` }}></div>
-      </div>
-
       {/* Hero Section */}
-      <div className="hero-section-main">
+      <div className="hero-modern">
         <div className="hero-badge">
           <span className="badge-icon">🧬</span>
           <span>ML Project Hub</span>
         </div>
         
-        <h1 className="hero-title-main">
+        <h1 className="hero-title">
           Breast Cancer<br />
-          <span className="gradient-text">{text}</span>
+          <span className="typing-text">{text}</span>
           <span className="cursor">|</span>
         </h1>
         
-        <p className="hero-subtitle-main">
+        <p className="hero-subtitle">
           Advanced machine learning for accurate risk assessment<br />
           Early detection saves lives
         </p>
         
-        <button className="hero-get-started" onClick={() => navigate('/patient-form')}>
-          Get Started
-          <span className="btn-arrow">→</span>
-        </button>
+        <div className="hero-buttons">
+          <button className="hero-button primary" onClick={handleGetStarted}>
+            Get Started
+          </button>
+          <button className="hero-button secondary" onClick={() => navigate('/dashboard')}>
+            Learn More
+          </button>
+        </div>
 
-        {/* Scroll Indicator */}
-        <div className="scroll-indicator">
-          <span>Scroll to explore</span>
-          <div className="scroll-mouse">
-            <div className="scroll-wheel"></div>
+        {/* Stats */}
+        <div className="hero-stats">
+          <div className="hero-stat">
+            <div className="hero-stat-icon">🎯</div>
+            <div>
+              <div className="hero-stat-value">95%</div>
+              <div className="hero-stat-label">Accuracy</div>
+            </div>
+          </div>
+          <div className="hero-stat">
+            <div className="hero-stat-icon">⚡</div>
+            <div>
+              <div className="hero-stat-value">&lt;5s</div>
+              <div className="hero-stat-label">Response</div>
+            </div>
+          </div>
+          <div className="hero-stat">
+            <div className="hero-stat-icon">📄</div>
+            <div>
+              <div className="hero-stat-value">PDF</div>
+              <div className="hero-stat-label">Report</div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Features Section */}
-      <div className="features-section">
-        <h2 className="section-title-main">Why Choose Us</h2>
-        <div className="features-grid-main">
-          {features.map((feature, index) => (
-            <div key={index} className="feature-card-main glass">
-              <div className="feature-icon-main">{feature.icon}</div>
-              <h3>{feature.title}</h3>
-              <p>{feature.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Stats Section */}
-      <div className="stats-section-main">
-        <div className="stats-container">
-          <div className="stat-item-main">
-            <div className="stat-number">95%</div>
-            <div className="stat-label-main">Accuracy</div>
+      <div className="features-modern">
+        {features.map((feature, index) => (
+          <div key={index} className="feature-modern glass">
+            <div className="feature-modern-icon">{feature.icon}</div>
+            <h3>{feature.title}</h3>
+            <p>{feature.desc}</p>
           </div>
-          <div className="stat-item-main">
-            <div className="stat-number">10K+</div>
-            <div className="stat-label-main">Patients</div>
-          </div>
-          <div className="stat-item-main">
-            <div className="stat-number">&lt;5s</div>
-            <div className="stat-label-main">Response</div>
-          </div>
-          <div className="stat-item-main">
-            <div className="stat-number">24/7</div>
-            <div className="stat-label-main">Available</div>
-          </div>
-        </div>
-      </div>
-
-      {/* CTA Section */}
-      <div className="cta-section-main">
-        <div className="cta-card-main">
-          <h2>Ready to Check Your Risk?</h2>
-          <p>Free, fast, and confidential assessment</p>
-          <button className="cta-button-main" onClick={() => navigate('/patient-form')}>
-            Get Started Now →
-          </button>
-        </div>
+        ))}
       </div>
     </div>
   );
