@@ -14,7 +14,6 @@ const Result = () => {
       // Get data from localStorage
       const storedResult = localStorage.getItem('predictionResult');
       const storedPatient = localStorage.getItem('patientInfo');
-      const storedInput = localStorage.getItem('inputData');
       
       console.log("Stored Result:", storedResult);
       console.log("Stored Patient:", storedPatient);
@@ -22,7 +21,7 @@ const Result = () => {
       if (storedResult) {
         setResult(JSON.parse(storedResult));
       }
-      if (storedPatient) {
+      if (storedPatient) {  
         setPatientData(JSON.parse(storedPatient));
       }
       
