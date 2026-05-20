@@ -55,9 +55,9 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-modern">
-      {/* Header with Date & Time */}
+      {/* Header with Title Center, Date/Time Right */}
       <div className="dashboard-header-modern">
-        <div>
+        <div className="header-title">
           <h1 className="glow-text">Health Dashboard</h1>
           <p className="subtitle">Your breast cancer awareness center</p>
         </div>
@@ -70,7 +70,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats Grid - Centered */}
       <div className="stats-grid">
         <div className="stat-card glass">
           <div className="stat-icon">🎯</div>
@@ -94,18 +94,18 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Action Button */}
-      <div className="action-card" onClick={() => navigate('/patient-form')}>
-        <div className="action-content">
-          <div className="action-text">
+      {/* Assessment Card - Centered */}
+      <div className="assessment-card" onClick={() => navigate('/patient-form')}>
+        <div className="assessment-content">
+          <div className="assessment-text">
             <h2>Start Your Risk Assessment</h2>
             <p>Get instant AI-powered breast cancer risk prediction</p>
           </div>
-          <button className="glow-button">Begin Assessment →</button>
+          <button className="assessment-btn">Begin Assessment →</button>
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs - Centered */}
       <div className="tabs">
         <button className={`tab-btn ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>
           📋 Overview
@@ -185,7 +185,7 @@ const Dashboard = () => {
       {/* Footer */}
       <div className="dashboard-footer">
         <p>⚠️ This is an AI-powered prediction tool. Always consult a doctor for medical advice.</p>
-        <p>© 2024 Breast Cancer Detector | Early Detection Saves Lives</p>
+        <p>© 2024 ML Project Hub | Early Detection Saves Lives</p>
       </div>
     </div>
   );
