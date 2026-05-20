@@ -6,39 +6,81 @@ const Result = () => {
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
   const [patientData, setPatientData] = useState(null);
+  const [inputData, setInputData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedResult = localStorage.getItem('predictionResult');
-    const storedPatient = localStorage.getItem('patientInfo');
-    
-    if (storedResult) {
-      setResult(JSON.parse(storedResult));
-    }
-    if (storedPatient) {
-      setPatientData(JSON.parse(storedPatient));
-    }
-    
-    if (!storedResult) {
-      navigate('/');
+    try {
+      // Get data from localStorage
+      const storedResult = localStorage.getItem('predictionResult');
+      const storedPatient = localStorage.getItem('patientInfo');
+      const storedInput = localStorage.getItem('inputData');
+      
+      console.log("Stored Result:", storedResult);
+      console.log("Stored Patient:", storedPatient);
+      
+      if (storedResult) {
+        setResult(JSON.parse(storedResult));
+      }
+      if (storedPatient) {
+        setPatientData(JSON.parse(storedPatient));
+      }
+      if (storedInput) {
+        setInputData(JSON.parse(storedInput));
+      }
+      
+      setLoading(false);
+      
+      if (!storedResult) {
+        setTimeout(() => navigate('/predict'), 2000);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setLoading(false);
     }
   }, [navigate]);
 
   const downloadPDF = () => {
     const element = document.getElementById('report-content');
-    html2pdf().from(element).save('breast-cancer-report.pdf');
+    if (element) {
+      html2pdf().from(element).save('breast-cancer-report.pdf');
+    }
   };
 
-  if (!result) return <div className="loading">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="result-container">
+        <div className="loading">Loading your result...</div>
+      </div>
+    );
+  }
+
+  if (!result) {
+    return (
+      <div className="result-container">
+        <div className="result-card">
+          <h2>No Result Found</h2>
+          <p>Please make a prediction first.</p>
+          <button onClick={() => navigate('/predict')} className="btn-new">
+            Go to Prediction
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const isPositive = result.prediction === 1;
   const confidence = (result.confidence * 100).toFixed(1);
+
+  // Debug log
+  console.log("Rendering result:", { isPositive, confidence });
 
   return (
     <div className="result-container">
       <div className={`result-card ${isPositive ? 'positive' : 'negative'}`}>
         <div className="result-icon">{isPositive ? '⚠️' : '✅'}</div>
         <h1>{isPositive ? 'High Risk Detected' : 'Low Risk Detected'}</h1>
-        <p>Confidence: {confidence}%</p>
+        <p className="confidence-text">Confidence: {confidence}%</p>
         
         <div className="progress-bar">
           <div className="progress-fill" style={{ width: `${confidence}%` }}></div>
@@ -46,16 +88,24 @@ const Result = () => {
         
         <div id="report-content" style={{ display: 'none' }}>
           <h2>Breast Cancer Detection Report</h2>
-          <p><strong>Patient:</strong> {patientData?.patientName}</p>
-          <p><strong>Age:</strong> {patientData?.patientAge}</p>
+          <p><strong>Patient Name:</strong> {patientData?.patientName || 'Not provided'}</p>
+          <p><strong>Age:</strong> {patientData?.patientAge || 'Not provided'}</p>
+          <p><strong>Contact:</strong> {patientData?.contactNumber || 'Not provided'}</p>
           <p><strong>Result:</strong> {isPositive ? 'High Risk' : 'Low Risk'}</p>
           <p><strong>Confidence:</strong> {confidence}%</p>
+          <p><strong>Date:</strong> {new Date().toLocaleDateString()}</p>
         </div>
         
         <div className="action-buttons">
-          <button onClick={downloadPDF} className="btn-pdf">📄 Download PDF Report</button>
-          <button onClick={() => navigate('/')} className="btn-home">🏠 Back to Home</button>
-          <button onClick={() => navigate('/predict')} className="btn-new">🔄 New Prediction</button>
+          <button onClick={downloadPDF} className="btn-pdf">
+            📄 Download PDF Report
+          </button>
+          <button onClick={() => navigate(-1)} className="btn-home">
+            ← Back
+          </button>
+          <button onClick={() => navigate('/predict')} className="btn-new">
+            🔄 New Prediction
+          </button>
         </div>
       </div>
     </div>
