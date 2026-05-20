@@ -7,7 +7,7 @@ const About = () => {
   return (
     <div className="about-container">
       <div className="about-card">
-        <h1>About ML Project Hub</h1>
+        <h1>About Breast Cancer Detector</h1>
         
         {/* Founder Section */}
         <div className="founder-section">
@@ -19,7 +19,7 @@ const About = () => {
             This project aims to make breast cancer screening more accessible and accurate.
           </p>
           <div className="founder-contact">
-            <a href="mailto:ritikvishwakarma6595@gmail.com">📧 ritikvishwakarma6595@gmail.com</a>
+            <a href="mailto:ritik8928416595@gmail.com">📧 BreastCanDetector@gmail.com</a>
             <a href="https://github.com/Ritik8928" target="_blank" rel="noopener noreferrer">🔗 GitHub</a>
           </div>
         </div>
