@@ -1078,3 +1078,22 @@ body {
     font-size: 1.3rem;
   }
 }
+
+.error-text {
+  color: #ff6b6b;
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+
+.patient-summary {
+  background: rgba(228,214,169,0.15);
+  padding: 12px 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.patient-summary p {
+  color: #E4D6A9;
+  margin: 0;
+}
