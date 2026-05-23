@@ -1,58 +1,146 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import html2pdf from 'html2pdf.js';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const Result = () => {
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
   const [patientData, setPatientData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showPDF, setShowPDF] = useState(false);
 
   useEffect(() => {
-    try {
-      const storedResult = localStorage.getItem('predictionResult');
-      const storedPatient = localStorage.getItem('patientInfo');
-      
-      console.log("Stored Result:", storedResult);
-      console.log("Stored Patient:", storedPatient);
-      
-      if (storedResult) {
-        setResult(JSON.parse(storedResult));
-      }
-      if (storedPatient) {  
-        setPatientData(JSON.parse(storedPatient));
-      }
-      
-      setLoading(false);
-      
-      if (!storedResult) {
-        setTimeout(() => navigate('/predict'), 2000);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setLoading(false);
+    const storedResult = localStorage.getItem('predictionResult');
+    const storedPatient = localStorage.getItem('patientInfo');
+    
+    if (storedResult) {
+      setResult(JSON.parse(storedResult));
+    }
+    if (storedPatient) {
+      setPatientData(JSON.parse(storedPatient));
+    }
+    
+    setLoading(false);
+    
+    if (!storedResult) {
+      setTimeout(() => navigate('/predict'), 2000);
     }
   }, [navigate]);
 
   const downloadPDF = () => {
-    setShowPDF(true);
-    // Wait for the PDF content to render
-    setTimeout(() => {
-      const element = document.getElementById('report-content');
-      if (element) {
-        const opt = {
-          margin: [0.5, 0.5, 0.5, 0.5],
-          filename: `breast-cancer-report-${new Date().toISOString().slice(0, 19)}.pdf`,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, letterRendering: true },
-          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-        };
-        html2pdf().set(opt).from(element).save().then(() => {
-          setShowPDF(false);
-        });
-      }
-    }, 100);
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    let y = 20;
+
+    // Header
+    doc.setFillColor(98, 43, 20);
+    doc.rect(0, 0, pageWidth, 40, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Breast Cancer Detection Report', pageWidth / 2, 25, { align: 'center' });
+    doc.setFontSize(10);
+    doc.text('AI-Powered Risk Assessment', pageWidth / 2, 35, { align: 'center' });
+
+    y = 55;
+    doc.setTextColor(0, 0, 0);
+    doc.setFillColor(245, 245, 245);
+    doc.rect(10, y - 8, pageWidth - 20, 12, 'F');
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Patient Information', 15, y);
+    
+    y += 10;
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    
+    // Patient Info Table
+    const patientInfo = [
+      ['Patient Name:', patientData?.patientName || 'Not provided'],
+      ['Age:', patientData?.patientAge ? `${patientData.patientAge} years` : 'Not provided'],
+      ['Contact Number:', patientData?.contactNumber || 'Not provided'],
+      ['Address:', patientData?.address || 'Not provided'],
+      ['Report Date:', new Date().toLocaleDateString()]
+    ];
+    
+    doc.autoTable({
+      startY: y,
+      head: [],
+      body: patientInfo,
+      theme: 'plain',
+      styles: { fontSize: 11, cellPadding: 4 },
+      columnStyles: { 0: { fontStyle: 'bold', textColor: [98, 43, 20] } }
+    });
+    
+    y = doc.lastAutoTable.finalY + 10;
+    
+    // Result Section
+    const isPositive = result?.prediction === 1;
+    const confidence = (result?.confidence * 100).toFixed(1);
+    
+    doc.setFillColor(245, 245, 245);
+    doc.rect(10, y - 8, pageWidth - 20, 12, 'F');
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Prediction Result', 15, y);
+    
+    y += 10;
+    
+    // Result Box
+    const resultColor = isPositive ? [201, 42, 42] : [43, 138, 62];
+    doc.setFillColor(resultColor[0], resultColor[1], resultColor[2]);
+    doc.roundedRect(15, y, pageWidth - 30, 40, 5, 5, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text(isPositive ? 'HIGH RISK DETECTED' : 'LOW RISK DETECTED', pageWidth / 2, y + 15, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text(`Confidence Level: ${confidence}%`, pageWidth / 2, y + 30, { align: 'center' });
+    
+    y += 55;
+    doc.setTextColor(0, 0, 0);
+    
+    // Recommendations
+    doc.setFillColor(245, 245, 245);
+    doc.rect(10, y - 8, pageWidth - 20, 12, 'F');
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Recommendations', 15, y);
+    
+    y += 10;
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    
+    const recommendations = isPositive ? [
+      '• Consult with an oncologist immediately',
+      '• Schedule a mammogram screening',
+      '• Discuss biopsy options with your doctor',
+      '• Maintain a healthy lifestyle'
+    ] : [
+      '• Continue regular self-examinations',
+      '• Schedule annual mammograms',
+      '• Maintain a healthy diet and exercise',
+      '• Limit alcohol consumption'
+    ];
+    
+    recommendations.forEach(rec => {
+      doc.text(rec, 20, y);
+      y += 8;
+    });
+    
+    y += 10;
+    
+    // Footer
+    doc.setTextColor(150, 150, 150);
+    doc.setFontSize(8);
+    const footerText = 'This report is generated by ML Project Hub - AI Breast Cancer Detection System';
+    const footerText2 = '⚠️ This is an AI-powered prediction tool. Please consult a healthcare professional for medical advice.';
+    doc.text(footerText, pageWidth / 2, pageHeight - 15, { align: 'center' });
+    doc.text(footerText2, pageWidth / 2, pageHeight - 8, { align: 'center' });
+    
+    // Save PDF
+    doc.save(`breast-cancer-report-${new Date().toISOString().slice(0, 19)}.pdf`);
   };
 
   if (loading) {
@@ -80,8 +168,6 @@ const Result = () => {
   const isPositive = result.prediction === 1;
   const confidence = (result.confidence * 100).toFixed(1);
 
-  console.log("Rendering result:", { isPositive, confidence });
-
   return (
     <div className="result-container">
       <div className={`result-card ${isPositive ? 'positive' : 'negative'}`}>
@@ -91,98 +177,6 @@ const Result = () => {
         
         <div className="progress-bar">
           <div className="progress-fill" style={{ width: `${confidence}%` }}></div>
-        </div>
-        
-        {/* PDF Content - Positioned off-screen when not generating */}
-        <div 
-          id="report-content" 
-          style={{ 
-            position: 'fixed', 
-            left: showPDF ? '0' : '-9999px',
-            top: showPDF ? '0' : '-9999px',
-            width: '800px',
-            background: 'white',
-            padding: '40px',
-            fontFamily: 'Arial, sans-serif',
-            zIndex: showPDF ? 9999 : -1
-          }}
-        >
-          <div style={{ textAlign: 'center', borderBottom: '2px solid #622B14', paddingBottom: '20px', marginBottom: '20px' }}>
-            <h1 style={{ color: '#622B14', margin: 0 }}>Breast Cancer Detection Report</h1>
-            <p style={{ color: '#666' }}>AI-Powered Risk Assessment</p>
-          </div>
-          
-          <div style={{ marginBottom: '20px' }}>
-            <h3 style={{ color: '#995F2F' }}>Patient Information</h3>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <tbody>
-                <tr>
-                  <td style={{ padding: '8px', fontWeight: 'bold', width: '30%' }}>Patient Name:</td>
-                  <td style={{ padding: '8px' }}>{patientData?.patientName || 'Not provided'}</td>
-                </tr>
-                <tr>
-                  <td style={{ padding: '8px', fontWeight: 'bold' }}>Age:</td>
-                  <td style={{ padding: '8px' }}>{patientData?.patientAge || 'Not provided'}</td>
-                </tr>
-                <tr>
-                  <td style={{ padding: '8px', fontWeight: 'bold' }}>Contact Number:</td>
-                  <td style={{ padding: '8px' }}>{patientData?.contactNumber || 'Not provided'}</td>
-                </tr>
-                <tr>
-                  <td style={{ padding: '8px', fontWeight: 'bold' }}>Address:</td>
-                  <td style={{ padding: '8px' }}>{patientData?.address || 'Not provided'}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <h3 style={{ color: '#995F2F' }}>Prediction Result</h3>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <tbody>
-                <tr>
-                  <td style={{ padding: '8px', fontWeight: 'bold', width: '30%' }}>Risk Assessment:</td>
-                  <td style={{ padding: '8px', color: isPositive ? '#c92a2a' : '#2b8a3e', fontWeight: 'bold' }}>
-                    {isPositive ? 'HIGH RISK' : 'LOW RISK'}
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ padding: '8px', fontWeight: 'bold' }}>Confidence Level:</td>
-                  <td style={{ padding: '8px' }}>{confidence}%</td>
-                </tr>
-                <tr>
-                  <td style={{ padding: '8px', fontWeight: 'bold' }}>Report Date:</td>
-                  <td style={{ padding: '8px' }}>{new Date().toLocaleDateString()}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <h3 style={{ color: '#995F2F' }}>Recommendations</h3>
-            <ul style={{ marginLeft: '20px' }}>
-              {isPositive ? (
-                <>
-                  <li>Consult with an oncologist immediately</li>
-                  <li>Schedule a mammogram screening</li>
-                  <li>Discuss biopsy options with your doctor</li>
-                  <li>Maintain a healthy lifestyle</li>
-                </>
-              ) : (
-                <>
-                  <li>Continue regular self-examinations</li>
-                  <li>Schedule annual mammograms</li>
-                  <li>Maintain a healthy diet and exercise</li>
-                  <li>Limit alcohol consumption</li>
-                </>
-              )}
-            </ul>
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #ddd', fontSize: '10px', color: '#999' }}>
-            <p>This report is generated by ML Project Hub - AI Breast Cancer Detection System</p>
-            <p>⚠️ This is an AI-powered prediction tool. Please consult a healthcare professional for medical advice.</p>
-          </div>
         </div>
         
         <div className="action-buttons">
