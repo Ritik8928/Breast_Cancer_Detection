@@ -6,7 +6,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="nav-container">
         <Link to="/" className="nav-brand">
-          🩺 ML Project Hub
+          🩺 Breast Cancer Detector
         </Link>
         <div className="nav-links">
           <Link to="/">Home</Link>

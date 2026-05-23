@@ -74,7 +74,7 @@ const Dashboard = () => {
       <div className="stats-grid">
         <div className="stat-card glass">
           <div className="stat-icon">🎯</div>
-          <div className="stat-value">95%</div>
+          <div className="stat-value">90%</div>
           <div className="stat-label">Model Accuracy</div>
         </div>
         <div className="stat-card glass">

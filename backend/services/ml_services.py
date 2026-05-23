@@ -1,32 +1,38 @@
 import joblib
 import pandas as pd
-import numpy as np
 import os
-import random
+
 
 class MLService:
     def __init__(self, model_path=None, preprocessor_path=None):
         """Initialize ML Service with model and preprocessor"""
+
         self.model = None
         self.preprocessor = None
-        
-        if model_path and os.path.exists(model_path):
-            try:
-                self.model = joblib.load(model_path)
-                print(f"✅ Model loaded from {model_path}")
-            except Exception as e:
-                print(f"❌ Error loading model: {e}")
-                self.model = None
-        
-        if preprocessor_path and os.path.exists(preprocessor_path):
-            try:
-                self.preprocessor = joblib.load(preprocessor_path)
-                print(f"✅ Preprocessor loaded from {preprocessor_path}")
-            except Exception as e:
-                print(f"⚠️ Error loading preprocessor: {e}")
-    
+
+        # Load model
+        if not model_path or not os.path.exists(model_path):
+            raise FileNotFoundError(f"❌ Model file not found: {model_path}")
+
+        try:
+            self.model = joblib.load(model_path)
+            print(f"✅ Model loaded from {model_path}")
+        except Exception as e:
+            raise Exception(f"❌ Error loading model: {e}")
+
+        # Load preprocessor
+        if not preprocessor_path or not os.path.exists(preprocessor_path):
+            raise FileNotFoundError(f"❌ Preprocessor file not found: {preprocessor_path}")
+
+        try:
+            self.preprocessor = joblib.load(preprocessor_path)
+            print(f"✅ Preprocessor loaded from {preprocessor_path}")
+        except Exception as e:
+            raise Exception(f"❌ Error loading preprocessor: {e}")
+
     def predict(self, data_dict):
         """Make prediction for single input"""
+
         try:
             # Convert frontend data to DataFrame
             df = pd.DataFrame([{
@@ -42,58 +48,30 @@ class MLService:
                 'Estrogen_Status': data_dict.get('Estrogen_Status', 'Positive'),
                 'Progesterone_Status': data_dict.get('Progesterone_Status', 'Positive')
             }])
-            
-            # Apply preprocessor if exists
-            if self.preprocessor is not None:
-                try:
-                    df = self.preprocessor.transform(df)
-                except Exception as e:
-                    print(f"⚠️ Preprocessor error: {e}")
-            
-            # Make prediction
-            if self.model is not None:
-                prediction = self.model.predict(df)
-                if hasattr(self.model, 'predict_proba'):
-                    prediction_proba = self.model.predict_proba(df)
-                    confidence = float(prediction_proba[0][1])
-                else:
-                    confidence = 0.85
-                
-                return {
-                    'success': True,
-                    'prediction': int(prediction[0]),
-                    'confidence': confidence
-                }
+
+            # Apply preprocessing
+            processed_data = self.preprocessor.transform(df)
+
+            # Prediction
+            prediction = self.model.predict(processed_data)
+
+            # Probability
+            if hasattr(self.model, 'predict_proba'):
+                prediction_proba = self.model.predict_proba(processed_data)
+                confidence = float(prediction_proba[0][1])
             else:
-                # Fallback to random if model not loaded
-                prediction = random.choice([0, 1])
-                confidence = random.uniform(0.7, 0.95)
-                return {
-                    'success': True,
-                    'prediction': int(prediction),
-                    'confidence': float(confidence)
-                }
-        
+                confidence = 0.0
+
+            return {
+                'success': True,
+                'prediction': int(prediction[0]),
+                'confidence': confidence
+            }
+
         except Exception as e:
             print(f"❌ Prediction error: {e}")
+
             return {
                 'success': False,
                 'error': str(e)
             }
-
-class MockMLService:
-    def __init__(self):
-        print("⚠️ Using Mock ML Service (Random predictions)")
-    
-    def predict(self, data_dict):
-        """Mock prediction - returns random result"""
-        prediction = random.choice([0, 1])
-        confidence = random.uniform(0.7, 0.95)
-        
-        print(f"🎲 Mock prediction: {prediction}, confidence: {confidence:.2%}")
-        
-        return {
-            'success': True,
-            'prediction': prediction,
-            'confidence': confidence
-        }

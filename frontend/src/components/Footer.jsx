@@ -4,8 +4,8 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="container">
-        <p>&copy; 2026 Breast Cancer Detection. All rights reserved.</p>
-        <p>Powered by Ritik Vishwakarma | Breast Cancer Detection System</p>
+        <p>&copy; 2026 Breast Cancer Detection System. Early detection saves lives.</p>
+        <p>Powered by Artificial Intelligence | For medical professionals</p>
       </div>
     </footer>
   );

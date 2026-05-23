@@ -13,7 +13,7 @@ const About = () => {
         <div className="founder-section">
           <div className="founder-avatar">👨‍💻</div>
           <h2>Ritik Vishwakarma</h2>
-          <p className="founder-title">Founder & Full Stack Developer</p>
+          <p className="founder-title">Founder</p>
           <p className="founder-bio">
             Passionate about using AI and machine learning to solve real-world healthcare problems. 
             This project aims to make breast cancer screening more accessible and accurate.
@@ -40,7 +40,7 @@ const About = () => {
         </ul>
 
         <h3>📊 Model Accuracy</h3>
-        <p>95% accuracy on test data, trained on clinical breast cancer datasets.</p>
+        <p>90% accuracy on test data, trained on clinical breast cancer datasets.</p>
 
         <h3>📋 Parameters Analyzed</h3>
         <ul>

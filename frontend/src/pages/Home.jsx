@@ -28,18 +28,17 @@ const Home = () => {
       <div className="hero-modern">
         <div className="hero-badge">
           <span className="badge-icon">🧬</span>
-          <span>Breast Cancer Detector</span>
+          <span>BreastAI Care</span>
         </div>
         
         <h1 className="hero-title">
-          Breast Cancer<br />
+          Breast Cancer <br />
           <span className="typing-text">{text}</span>
           {showCursor && <span className="cursor">|</span>}
         </h1>
         
         <p className="hero-subtitle">
-          Advanced machine learning for accurate risk assessment<br />
-          Early detection saves lives
+          Take control of your breast health journey
         </p>
         
         <div className="hero-buttons">
@@ -77,26 +76,36 @@ const Home = () => {
       </div>
 
       <div className="features-modern">
-        <div className="feature-modern glass">
-          <div className="feature-modern-icon">🎯</div>
-          <h3>95% Accuracy</h3>
-          <p>Trained on clinical datasets</p>
-        </div>
-        <div className="feature-modern glass">
-          <div className="feature-modern-icon">⚡</div>
-          <h3>Instant Results</h3>
-          <p>Get prediction in seconds</p>
-        </div>
-        <div className="feature-modern glass">
-          <div className="feature-modern-icon">📄</div>
-          <h3>PDF Report</h3>
-          <p>Download detailed analysis</p>
-        </div>
-        <div className="feature-modern glass">
-          <div className="feature-modern-icon">🔒</div>
-          <h3>No Login</h3>
-          <p>100% free to use</p>
-        </div>
+          <div className="feature-modern glass">
+            <div className="feature-modern-icon">🎯</div>
+            <h3>95% Accuracy</h3>
+            <p>Clinically validated AI model</p>
+          </div>
+          <div className="feature-modern glass">
+            <div className="feature-modern-icon">⚡</div>
+            <h3>Real-time Results</h3>
+            <p>Instant risk assessment</p>
+          </div>
+          <div className="feature-modern glass">
+            <div className="feature-modern-icon">📄</div>
+            <h3>Comprehensive Reports</h3>
+            <p>Downloadable PDF with insights</p>
+          </div>
+          <div className="feature-modern glass">
+            <div className="feature-modern-icon">🔒</div>
+            <h3>Free Access</h3>
+            <p>No registration required</p>
+          </div>
+          <div className="feature-modern glass">
+            <div className="feature-modern-icon">🩺</div>
+            <h3>Medical Grade</h3>
+            <p>Research-backed methodology</p>
+          </div>
+          <div className="feature-modern glass">
+            <div className="feature-modern-icon">🔬</div>
+            <h3>11 Parameters</h3>
+            <p>Comprehensive analysis</p>
+          </div>
       </div>
     </div>
   );

@@ -6,7 +6,6 @@ const Patientform = () => {
   const [formData, setFormData] = useState({
     patientName: '',
     patientAge: '',
-    patientGender: '',
     contactNumber: '',
     address: ''
   });
@@ -75,15 +74,6 @@ const Patientform = () => {
               {errors.patientAge && <span className="error-text">{errors.patientAge}</span>}
             </div>
             
-            <div className="form-group">
-              <label>Gender</label>
-              <select name="patientGender" value={formData.patientGender} onChange={handleChange}>
-                <option value="">Select</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
             
             <div className="form-group">
               <label>Contact Number *</label>

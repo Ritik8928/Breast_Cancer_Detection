@@ -65,7 +65,7 @@ const Result = () => {
         ['Report Date:', new Date().toLocaleDateString()]
       ];
       
-      // ✅ Fixed: Use autoTable(doc, { ... })
+      // Use autoTable(doc, { ... })
       autoTable(doc, {
         startY: y,
         head: [],

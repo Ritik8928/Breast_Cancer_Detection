@@ -17,20 +17,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 MODEL_PATH = os.path.join(BASE_DIR, 'artifacts', 'model.pkl')
 PREPROCESSOR_PATH = os.path.join(BASE_DIR, 'artifacts', 'preprocessor.pkl')
 
-print("📁 MODEL PATH:", MODEL_PATH)
-print("📁 PREPROCESSOR PATH:", PREPROCESSOR_PATH)
+print("MODEL PATH:", MODEL_PATH)
+print("PREPROCESSOR PATH:", PREPROCESSOR_PATH)
 
 # Check files
 if not os.path.exists(MODEL_PATH):
-    raise FileNotFoundError(f"❌ Model file not found: {MODEL_PATH}")
+    raise FileNotFoundError(f"Model file not found: {MODEL_PATH}")
 
 if not os.path.exists(PREPROCESSOR_PATH):
-    raise FileNotFoundError(f"❌ Preprocessor file not found: {PREPROCESSOR_PATH}")
+    raise FileNotFoundError(f"Preprocessor file not found: {PREPROCESSOR_PATH}")
 
 # Load ML service
 ml_service = MLService(MODEL_PATH, PREPROCESSOR_PATH)
 
-print("✅ Using real ML model")
+print("Using real ML model")
 
 
 @predict_bp.route('/', methods=['POST'])
@@ -39,8 +39,8 @@ def predict():
         data = request.json
 
         print("=" * 50)
-        print("📊 Prediction request received")
-        print(f"📊 Data keys: {list(data.keys()) if data else 'None'}")
+        print("Prediction request received")
+        print(f"Data keys: {list(data.keys()) if data else 'None'}")
         print("=" * 50)
 
         result = ml_service.predict(data)
