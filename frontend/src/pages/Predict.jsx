@@ -21,19 +21,14 @@ const Predict = () => {
   });
   const [errors, setErrors] = useState({});
 
-  // Load patient info on component mount
   useEffect(() => {
     const patient = localStorage.getItem('patientInfo');
     if (patient) {
       const patientData = JSON.parse(patient);
       setPatientInfo(patientData);
-      // Auto-fill age from patient form
-      setFormData(prev => ({
-        ...prev,
-        Age: patientData.patientAge || ''
-      }));
+      // Age auto-fill from patient form
+      setFormData(prev => ({ ...prev, Age: patientData.patientAge || '' }));
     } else {
-      // No patient info, go back to patient form
       navigate('/patient-form');
     }
   }, [navigate]);
@@ -48,16 +43,16 @@ const Predict = () => {
   const validateForm = () => {
     let newErrors = {};
     if (!formData.Age) newErrors.Age = 'Age is required';
-    if (!formData.Tumour_Size) newErrors.Tumour_Size = 'Tumour Size is required';
-    if (!formData.Regional_nodes_examined) newErrors.Regional_nodes_examined = 'Regional nodes examined is required';
-    if (!formData.Regional_nodes_positive) newErrors.Regional_nodes_positive = 'Regional nodes positive is required';
+    if (!formData.Tumour_Size) newErrors.Tumour_Size = 'Tumour size is required';
+    if (!formData.Regional_nodes_examined) newErrors.Regional_nodes_examined = 'Nodes examined is required';
+    if (!formData.Regional_nodes_positive) newErrors.Regional_nodes_positive = 'Positive nodes is required';
     if (!formData.Race) newErrors.Race = 'Race is required';
-    if (!formData.Martial_Status) newErrors.Martial_Status = 'Marital Status is required';
+    if (!formData.Martial_Status) newErrors.Martial_Status = 'Marital status is required';
     if (!formData.T_Stage) newErrors.T_Stage = 'T Stage is required';
     if (!formData.N_Stage) newErrors.N_Stage = 'N Stage is required';
     if (!formData.Sixth_Stage) newErrors.Sixth_Stage = 'Sixth Stage is required';
-    if (!formData.Estrogen_Status) newErrors.Estrogen_Status = 'Estrogen Status is required';
-    if (!formData.Progesterone_Status) newErrors.Progesterone_Status = 'Progesterone Status is required';
+    if (!formData.Estrogen_Status) newErrors.Estrogen_Status = 'Estrogen status is required';
+    if (!formData.Progesterone_Status) newErrors.Progesterone_Status = 'Progesterone status is required';
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -78,94 +73,88 @@ const Predict = () => {
         navigate('/result');
       } else {
         alert('Prediction failed: ' + response.data.error);
-        setLoading(false);
       }
     } catch (error) {
       console.error('Error:', error);
       alert('Prediction failed: ' + (error.response?.data?.error || error.message));
-      setLoading(false);
     }
+    
+    setLoading(false);
   };
 
   return (
     <div className="form-container">
       <div className="form-card">
-        <h2>🩺 Medical Parameters</h2>
+        <h2>🩺 Medical Information</h2>
         
-        {/* Patient Summary */}
         {patientInfo && (
           <div className="patient-summary">
-            <p><strong>Patient:</strong> {patientInfo.patientName} | <strong>Age:</strong> {patientInfo.patientAge} | <strong>Contact:</strong> {patientInfo.contactNumber}</p>
+            <p>👤 Patient: {patientInfo.patientName} | 📅 Age: {patientInfo.patientAge} | 📞 {patientInfo.contactNumber}</p>
           </div>
         )}
         
-        <p>Enter the following clinical data</p>
+        <p>Please provide the following medical information</p>
         
         <form onSubmit={handleSubmit}>
           <div className="form-grid">
+            
+            {/* Age - READONLY (Auto-filled from patient form) */}
             <div className="form-group">
-              <label>Age at Diagnosis *</label>
+              <label>📅 Your Age</label>
               <input 
                 type="number" 
                 name="Age" 
                 value={formData.Age} 
                 onChange={handleChange} 
+                readOnly 
+                disabled
+                style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
                 required 
               />
+              <small>Age is automatically filled from patient information</small>
               {errors.Age && <span className="error-text">{errors.Age}</span>}
             </div>
             
+            {/* Tumour Size */}
             <div className="form-group">
-              <label>Tumour Size (mm) *</label>
-              <input 
-                type="number" 
-                step="0.1" 
-                name="Tumour_Size" 
-                value={formData.Tumour_Size} 
-                onChange={handleChange} 
-                required 
-              />
+              <label>📏 Tumour Size (mm)</label>
+              <input type="number" step="0.1" name="Tumour_Size" value={formData.Tumour_Size} onChange={handleChange} required />
+              <small>Size of the tumour in millimeters</small>
               {errors.Tumour_Size && <span className="error-text">{errors.Tumour_Size}</span>}
             </div>
             
+            {/* Nodes Examined */}
             <div className="form-group">
-              <label>Regional Nodes Examined *</label>
-              <input 
-                type="number" 
-                name="Regional_nodes_examined" 
-                value={formData.Regional_nodes_examined} 
-                onChange={handleChange} 
-                required 
-              />
+              <label>🔬 Lymph Nodes Checked</label>
+              <input type="number" name="Regional_nodes_examined" value={formData.Regional_nodes_examined} onChange={handleChange} required />
+              <small>How many lymph nodes were examined</small>
               {errors.Regional_nodes_examined && <span className="error-text">{errors.Regional_nodes_examined}</span>}
             </div>
             
+            {/* Positive Nodes */}
             <div className="form-group">
-              <label>Regional Nodes Positive *</label>
-              <input 
-                type="number" 
-                name="Regional_nodes_positive" 
-                value={formData.Regional_nodes_positive} 
-                onChange={handleChange} 
-                required 
-              />
+              <label>⚠️ Cancer in Nodes</label>
+              <input type="number" name="Regional_nodes_positive" value={formData.Regional_nodes_positive} onChange={handleChange} required />
+              <small>How many nodes had cancer cells</small>
               {errors.Regional_nodes_positive && <span className="error-text">{errors.Regional_nodes_positive}</span>}
             </div>
             
+            {/* Race */}
             <div className="form-group">
-              <label>Race *</label>
+              <label>🌍 Your Background</label>
               <select name="Race" value={formData.Race} onChange={handleChange} required>
-                <option value="">Select Race</option>
-                <option value="White">White</option>
-                <option value="Black">Black</option>
-                <option value="Asian">Asian</option>
-                <option value="Other">Other</option>
+                <option value="">Select your background</option>
+                <option value="White">White / Caucasian</option>
+                <option value="Black">Black / African American</option>
+                <option value="Asian">Asian / Indian / Desi</option>
+                <option value="Other">Other / Mixed</option>
               </select>
               {errors.Race && <span className="error-text">{errors.Race}</span>}
             </div>
             
+            {/* Marital Status */}
             <div className="form-group">
-              <label>Marital Status *</label>
+              <label>💍 Marital Status</label>
               <select name="Martial_Status" value={formData.Martial_Status} onChange={handleChange} required>
                 <option value="">Select Status</option>
                 <option value="Married">Married</option>
@@ -176,65 +165,75 @@ const Predict = () => {
               {errors.Martial_Status && <span className="error-text">{errors.Martial_Status}</span>}
             </div>
             
+            {/* T Stage */}
             <div className="form-group">
-              <label>T Stage *</label>
+              <label>📊 Tumour Stage (T)</label>
               <select name="T_Stage" value={formData.T_Stage} onChange={handleChange} required>
-                <option value="">Select T Stage</option>
-                <option value="Stage I">Stage I</option>
-                <option value="Stage II">Stage II</option>
-                <option value="Stage III">Stage III</option>
-                <option value="Stage IV">Stage IV</option>
+                <option value="">Select Stage</option>
+                <option value="Stage I">Stage I - Early</option>
+                <option value="Stage II">Stage II - Moderate</option>
+                <option value="Stage III">Stage III - Advanced</option>
+                <option value="Stage IV">Stage IV - Very Advanced</option>
               </select>
+              <small>Size and spread of the main tumour</small>
               {errors.T_Stage && <span className="error-text">{errors.T_Stage}</span>}
             </div>
             
+            {/* N Stage */}
             <div className="form-group">
-              <label>N Stage *</label>
+              <label>🩺 Nodes Stage (N)</label>
               <select name="N_Stage" value={formData.N_Stage} onChange={handleChange} required>
-                <option value="">Select N Stage</option>
-                <option value="Stage I">Stage I</option>
-                <option value="Stage II">Stage II</option>
-                <option value="Stage III">Stage III</option>
-                <option value="Stage IV">Stage IV</option>
+                <option value="">Select Stage</option>
+                <option value="Stage I">Stage I - Few nodes affected</option>
+                <option value="Stage II">Stage II - More nodes affected</option>
+                <option value="Stage III">Stage III - Many nodes affected</option>
+                <option value="Stage IV">Stage IV - Severe node involvement</option>
               </select>
+              <small>How much cancer has spread to lymph nodes</small>
               {errors.N_Stage && <span className="error-text">{errors.N_Stage}</span>}
             </div>
             
+            {/* Sixth Stage */}
             <div className="form-group">
-              <label>Sixth Stage *</label>
+              <label>📈 Overall Stage (6th)</label>
               <select name="Sixth_Stage" value={formData.Sixth_Stage} onChange={handleChange} required>
-                <option value="">Select Sixth Stage</option>
-                <option value="Stage I">Stage I</option>
-                <option value="Stage II">Stage II</option>
-                <option value="Stage III">Stage III</option>
-                <option value="Stage IV">Stage IV</option>
+                <option value="">Select Stage</option>
+                <option value="Stage I">Stage I - Early detection</option>
+                <option value="Stage II">Stage II - Moderate</option>
+                <option value="Stage III">Stage III - Advanced</option>
+                <option value="Stage IV">Stage IV - Metastatic</option>
               </select>
+              <small>Overall cancer stage classification</small>
               {errors.Sixth_Stage && <span className="error-text">{errors.Sixth_Stage}</span>}
             </div>
             
+            {/* Estrogen Status */}
             <div className="form-group">
-              <label>Estrogen Status *</label>
+              <label>💊 Estrogen Receptor (ER)</label>
               <select name="Estrogen_Status" value={formData.Estrogen_Status} onChange={handleChange} required>
                 <option value="">Select Status</option>
-                <option value="Positive">Positive</option>
-                <option value="Negative">Negative</option>
+                <option value="Positive">Positive - Hormone sensitive</option>
+                <option value="Negative">Negative - Not hormone sensitive</option>
               </select>
+              <small>Does the cancer respond to estrogen?</small>
               {errors.Estrogen_Status && <span className="error-text">{errors.Estrogen_Status}</span>}
             </div>
             
+            {/* Progesterone Status */}
             <div className="form-group">
-              <label>Progesterone Status *</label>
+              <label>💊 Progesterone Receptor (PR)</label>
               <select name="Progesterone_Status" value={formData.Progesterone_Status} onChange={handleChange} required>
                 <option value="">Select Status</option>
-                <option value="Positive">Positive</option>
-                <option value="Negative">Negative</option>
+                <option value="Positive">Positive - Hormone sensitive</option>
+                <option value="Negative">Negative - Not hormone sensitive</option>
               </select>
+              <small>Does the cancer respond to progesterone?</small>
               {errors.Progesterone_Status && <span className="error-text">{errors.Progesterone_Status}</span>}
             </div>
           </div>
           
           <button type="submit" className="btn-submit" disabled={loading}>
-            {loading ? 'Predicting...' : '🔮 Predict Now'}
+            {loading ? 'Analyzing...' : '🔮 Get Risk Assessment'}
           </button>
         </form>
       </div>
