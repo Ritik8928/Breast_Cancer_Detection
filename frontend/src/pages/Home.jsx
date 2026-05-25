@@ -54,7 +54,7 @@ const Home = () => {
           <div className="hero-stat">
             <div className="hero-stat-icon">🎯</div>
             <div>
-              <div className="hero-stat-value">95%</div>
+              <div className="hero-stat-value">90%</div>
               <div className="hero-stat-label">Accuracy</div>
             </div>
           </div>
@@ -78,7 +78,7 @@ const Home = () => {
       <div className="features-modern">
           <div className="feature-modern glass">
             <div className="feature-modern-icon">🎯</div>
-            <h3>95% Accuracy</h3>
+            <h3>90% Accuracy</h3>
             <p>Clinically validated AI model</p>
           </div>
           <div className="feature-modern glass">
